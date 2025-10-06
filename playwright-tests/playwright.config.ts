@@ -1,4 +1,20 @@
 import { defineConfig, devices } from "@playwright/test";
+import path from "path";
+import fs from "fs";
+import dotenv from "dotenv";
+
+// Load root .env and .env.local if present so tests get secrets without manual export
+import { fileURLToPath } from "url";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const projectRoot = path.resolve(__dirname, "../");
+const rootEnv = path.join(projectRoot, ".env");
+const localEnv = path.join(projectRoot, ".env.local");
+if (fs.existsSync(rootEnv)) dotenv.config({ path: rootEnv });
+if (fs.existsSync(localEnv)) dotenv.config({ path: localEnv });
+
+// Path where we will store authenticated state after global setup
+const storageStatePath = path.resolve(__dirname, "storageState.json");
 
 /**
  * Read environment variables from file.
@@ -27,6 +43,9 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: "http://localhost:3000",
+    storageState: fs.existsSync(storageStatePath)
+      ? storageStatePath
+      : undefined,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
@@ -77,4 +96,5 @@ export default defineConfig({
     cwd: "../",
     reuseExistingServer: !process.env.CI,
   },
+  globalSetup: path.resolve(__dirname, "global-setup.ts"),
 });
