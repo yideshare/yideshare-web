@@ -9,16 +9,21 @@ This directory contains end-to-end tests for YideShare using Playwright.
 Make sure you have Node.js installed, have run `npm install` from the project root and have installed playwright locally.
 
 ## Running Tests
+
 _Make sure you are running server from parent dir before running tests._
 
 Ex:
+
 ```bash
 npm run dev
 ```
+
 Then navigate to playwright-tests directory.
+
 ```bash
 cd playwright-tests
 ```
+
 ### Basic Commands
 
 Run all tests:
@@ -52,6 +57,7 @@ Run tests with specific number of workers (recommended not to due to db conflict
 ```bash
 npx playwright test --workers=2
 ```
+
 ### Writing Tests
 
 ```bash
@@ -74,6 +80,8 @@ Debug a specific test:
 ```bash
 npx playwright test --debug tests/bookmark.spec.ts
 ```
+
+Mainly for Lena, but if Playwright can't find any tests, try deleting the test-results folder.
 
 ### Reports
 
