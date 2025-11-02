@@ -13,6 +13,14 @@ export async function middleware(request: NextRequest) {
   // try to get user cookie
   const token = request.cookies.get("auth")?.value;
 
+  // allow API calls with x-user-netid when not prod
+  if (process.env.NODE_ENV !== "production") {
+    const devNetId = request.headers.get("x-user-netid");
+    if (devNetId && pathname.startsWith("/api/")) {
+      return NextResponse.next();
+    }
+  }
+
   // build CAS login url
   const intended = pathname + request.nextUrl.search;
   const loginUrl = new URL("/api/auth/cas-login", request.url);

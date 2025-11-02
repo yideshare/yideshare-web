@@ -11,7 +11,7 @@ async function resolveNetId(req: Request, body?: any): Promise<string> {
     if (headerNetId) return headerNetId;
     if (body?.senderNetId) return body.senderNetId;
   }
-  throw new Error("Unauthorized: netId not found or signature invalid");
+  throw new ApiError("Unauthorized: netId not found or signature invalid", 401);
 }
 
 export const GET = withApiErrorHandler(async (req: Request) => {
