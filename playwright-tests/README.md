@@ -6,7 +6,7 @@ This directory contains end-to-end tests for YideShare using Playwright.
 
 ### Prerequisites
 
-Make sure you have Node.js installed and have run `npm install` from the project root.
+Make sure you have Node.js installed, have run `npm install` from the project root and have installed playwright locally.
 
 ## Running Tests
 _Make sure you are running server from parent dir before running tests._

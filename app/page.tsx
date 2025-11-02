@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { LogIn, MapPin, Calendar, Users } from "lucide-react";
+import { LogIn } from "lucide-react";
 import * as React from "react";
 import Link from "next/link";
+import { PiTaxi, PiHandshake, PiIdentificationCard } from "react-icons/pi";
 
 export default function Home() {
   return (
@@ -25,19 +26,20 @@ export default function Home() {
         {/* NAV + HERO CONTENT */}
         <div className="relative z-10 flex flex-col h-full">
           {/* ---- NAV ---- */}
-          <nav className="flex items-center justify-center px-4 py-4 sm:px-6 lg:px-12">
+          <nav className="flex items-center justify-center px-5 py-5 sm:px-6 lg:px-12 mb-10">
+            
             <Link href="/feed">
-              <h1 className="font-righteous tracking-wide text-white text-xl sm:text-2xl md:text-3xl hover:text-white/90 transition-colors">
+              <h1 className="font-righteous font-normal tracking-wide text-white text-xl sm:text-2xl md:text-3xl hover:text-white/90 transition-colors">
                 Yideshare
               </h1>
             </Link>
           </nav>
 
           {/* ---- HERO CONTENT ---- */}
-          <div className="flex-1 flex flex-col justify-center px-6 sm:px-8 mb-12 sm:mb-16">
+          <div className="flex-1 flex flex-col justify-center px-6 sm:px-8 mb-8 sm:mb-10 mt-20">
             {/* Headline & Subtitle */}
             <div className="max-w-3xl mt-6 sm:mt-10 mx-auto text-center">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-righteous tracking-wide leading-tight text-white">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-righteous font-normal tracking-wide leading-tight text-white">
                 Share the ride. Save the planet.
                 <br />
                 Split the cost.
@@ -57,7 +59,7 @@ export default function Home() {
                 window.location.href = target;
               }}
               aria-label="Login"
-              className="inline-flex items-center gap-2 rounded-full bg-white/90 px-5 py-3 text-sm sm:text-base font-semibold text-primary shadow hover:bg-white"
+              className="inline-flex items-center gap-2 rounded-full bg-primary/90 px-5 py-3 text-sm sm:text-base font-semibold text-white shadow hover:bg-primary"
             >
               <LogIn size={18} className="w-5 h-5" />
               <span>Log in with CAS</span>
@@ -68,41 +70,28 @@ export default function Home() {
 
       {/* ================= VALUE PROP ================= */}
       <section className="mx-auto w-full max-w-5xl px-4 sm:px-6 py-12 sm:py-20 text-center">
-        <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground">
-          Why Yideshare?
+        <h3 className="text-xl sm:text-2xl md:text-3xl font-righteous font-normal text-black max-w-xl mx-auto">
+          Find other Yalies to split Ubers, Lyfts, carpool with, etc.
         </h3>
-        <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-sm sm:text-base text-gray-600 px-2">
-          Match with other Yalies headed the same way and save money on Ubers,
-          Lyfts, and carpools.
-        </p>
 
         <div className="mt-10 sm:mt-16 grid gap-8 sm:gap-12 sm:grid-cols-3">
           <div className="flex flex-col items-center gap-3 sm:gap-4">
-            <Users size={40} className="sm:w-12 sm:h-12 text-primary" />
-            <h4 className="text-base sm:text-lg font-semibold text-foreground">
-              Yale‑only network
+            <PiIdentificationCard size={40} className="sm:w-12 sm:h-12 text-primary" />
+            <h4 className="font-lexend text-lg sm:text-xl font-normal text-primary">
+              Log in with your Yale account
             </h4>
-            <p className="text-xs sm:text-sm text-gray-600 px-4 sm:px-0">
-              Log in with CAS to join a trusted community of classmates.
-            </p>
           </div>
           <div className="flex flex-col items-center gap-3 sm:gap-4">
-            <Calendar size={40} className="sm:w-12 sm:h-12 text-primary" />
-            <h4 className="text-base sm:text-lg font-semibold text-foreground">
-              Instant matching
+            <PiHandshake size={40} className="sm:w-12 sm:h-12 text-primary" />
+            <h4 className="font-lexend text-lg sm:text-xl font-normal text-primary">
+              Find a friend with a similar journey
             </h4>
-            <p className="text-xs sm:text-sm text-gray-600 px-4 sm:px-0">
-              Post a ride and instantly match with others on the same schedule.
-            </p>
           </div>
           <div className="flex flex-col items-center gap-3 sm:gap-4">
-            <MapPin size={40} className="sm:w-12 sm:h-12 text-primary" />
-            <h4 className="text-base sm:text-lg font-semibold text-foreground">
-              Budget‑friendly & low‑impact
+            <PiTaxi size={40} className="sm:w-12 sm:h-12 text-primary" />
+            <h4 className="font-lexend text-lg sm:text-xl font-normal text-primary">
+              Coordinate and ride together!
             </h4>
-            <p className="text-xs sm:text-sm text-gray-600 px-4 sm:px-0">
-              Split fares and reduce emissions—everyone wins.
-            </p>
           </div>
         </div>
       </section>
@@ -110,7 +99,7 @@ export default function Home() {
       {/* ================= FRIENDS PREVIEW (BOTTOM) ================= */}
       <section className="bg-[#7DA395]/60 py-16 sm:py-20">
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 text-center">
-          <h3 className="font-righteous text-white text-2xl sm:text-3xl md:text-4xl tracking-wide mb-8">
+          <h3 className="font-righteous font-normal text-white text-2xl sm:text-3xl md:text-4xl tracking-wide mb-12">
             See where your friends are going
           </h3>
 
@@ -128,6 +117,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ================= QUESTIONS + SHARE LINK ================= */}
     </main>
   );
 }

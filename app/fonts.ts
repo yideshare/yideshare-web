@@ -6,4 +6,10 @@ export const righteous = localFont({
   variable: '--font-righteous',
 });
 
+export const lexend = localFont({
+  src: '../fonts/Lexend-VariableFont_wght.ttf',
+  display: 'swap',
+  variable: '--font-lexend',
+});
+
 //hi this is lauren! testing to see whether this is how i can commit changes... 

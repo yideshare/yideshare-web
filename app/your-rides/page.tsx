@@ -1,33 +1,20 @@
 // yideshare/app/your-rides/page.tsx
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { cookies } from "next/headers";
 import YourRidesClient from "./your-rides-client";
 import { findBookmarkedRides } from "@/lib/ride";
+import { getUserNetIdFromCookies } from "@/lib/user";
 
 export default async function DashboardPage() {
-  /* -------------------------------------------------------------------- */
-  /*  auth                                                                */
-  /* -------------------------------------------------------------------- */
-
-  const cookieStore = await cookies();
-  const userCookie = cookieStore.get("user");
-
-  if (!userCookie) {
-    return <div>Please log in to view your rides.</div>;
+  // server-side: verify httpOnly JWT w/ updated helper, chat helped with this sorry guys desperate times
+  const netId = await getUserNetIdFromCookies();
+  if (!netId) {
+    redirect(`/api/auth/cas-login?next=${encodeURIComponent("/your-rides")}`);
   }
-
-  const { netId } = JSON.parse(userCookie.value);
-
-  /* -------------------------------------------------------------------- */
-  /*  data                                                                */
-  /* -------------------------------------------------------------------- */
 
   const ownedRides = await prisma.ride.findMany({
     take: 6,
-    where: {
-      ownerNetId: netId,
-      isClosed: false,
-    },
+    where: { ownerNetId: netId, isClosed: false },
     orderBy: { startTime: "desc" },
   });
 
@@ -35,5 +22,10 @@ export default async function DashboardPage() {
   const bookmarks = await findBookmarkedRides(netId);
   const bookmarkedRideIds = bookmarks.map((b) => b.ride.rideId);
 
-  return <YourRidesClient ownedRides={ownedRides} bookmarkedRideIds={bookmarkedRideIds} />;
+  return (
+    <YourRidesClient
+      ownedRides={ownedRides}
+      bookmarkedRideIds={bookmarkedRideIds}
+    />
+  );
 }

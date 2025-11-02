@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createHmac } from "node:crypto";
 import { findOrCreateUser } from "@/lib/user";
 import { fetchYaliesData } from "@/lib/yalies";
-import { validateCASTicket } from "@/lib/cas-validate";
+import { validateCASTicket, createJWT } from "@/lib/validate";
 import { withApiErrorHandler, ApiError } from "@/lib/withApiErrorHandler";
 
 function getBaseUrl(req: Request) {
@@ -72,29 +72,20 @@ async function getHandler(req: Request) {
   await findOrCreateUser(netId, firstName, lastName, email);
 
   const redirectTo = resolveSafeRedirect(redirectPath, baseUrl);
-
   const successResponse = NextResponse.redirect(redirectTo);
-  const userValue = JSON.stringify({ firstName, lastName, email, netId });
-  const secret = process.env.COOKIE_SECRET || "dev-cookie-secret";
-  const signature = createHmac("sha256", secret)
-    .update(userValue)
-    .digest("hex");
 
-  // Preserve existing non-httpOnly cookie if the client relies on it
-  successResponse.cookies.set("user", userValue, {
-    httpOnly: false,
+  // set auth cookie
+  const jwt_signed = await createJWT(firstName, lastName, email, netId);
+
+  successResponse.cookies.set("auth", jwt_signed, {
+    httpOnly: true, // no silly user, cannot touch this, this is precious, this is gold
     path: "/",
     secure: baseUrl.startsWith("https"),
     sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
-  });
-  // Add an httpOnly signature cookie so server can verify authenticity
-  successResponse.cookies.set("user_sig", signature, {
-    httpOnly: true,
-    path: "/",
-    secure: baseUrl.startsWith("https"),
-    sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 7,
+    // for the LOVE OF GOD PLEASE make sure this matches the expiry of the token
+    // cookies and token go bad at the same time --> life easy :)
+    // set for 1h to match the fallback JWT_EXPIRES_IN value
+    maxAge: 60 * 60,
   });
 
   console.log("CAS Validate - Successfully authenticated user:", netId);

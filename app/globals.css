@@ -9,6 +9,7 @@
 @layer base {
   :root {
     --font-righteous: 'Righteous', cursive;
+    --font-lexend: 'Lexend', sans-serif;
 
     /* light mode */
     --background: 185 37% 93.7%;         /* #e9f4f5  */
@@ -115,6 +116,10 @@
 
 .font-righteous {
   font-family: var(--font-righteous);
+}
+
+.font-lexend {
+  font-family: var(--font-lexend)
 }
 
 @supports (-webkit-touch-callout: none) {

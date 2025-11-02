@@ -21,6 +21,13 @@ async function getHandler(request: Request) {
   const dateObject = dateRaw ? decodeDate(dateRaw) : null;
   const hasDate = !!dateObject;
 
+  // crude and silly no filter check if someone just tried fetching all
+  // if we are confident in our protection this can be removed | wdym by protection? (rock eyebrow raise)
+  const noFilters = !hasFrom && !hasTo && !hasDate && !hasStart && !hasEnd;
+  if (noFilters) {
+    return NextResponse.json([]);
+  }
+
   let filterStartTime: Date | null = null;
   let filterEndTime: Date | null = null;
 
