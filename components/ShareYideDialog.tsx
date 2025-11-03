@@ -45,6 +45,9 @@ interface ShareYideDialogProps {
   description: string;
   setDescription: (v: string) => void;
 
+  hasCar: boolean;
+  setHasCar: (v: boolean) => void;
+
   handleShareYide: (e: React.FormEvent) => Promise<void>;
 }
 
@@ -68,6 +71,8 @@ export default function ShareYideDialog({
   description,
   setDescription,
   handleShareYide,
+  hasCar,
+  setHasCar,
 }: ShareYideDialogProps) {
   const [phoneError, setPhoneError] = React.useState<string | undefined>(
     undefined
@@ -172,6 +177,22 @@ export default function ShareYideDialog({
                 onChange={setEndTime}
               />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="hasCar">
+              Do you have your own car? <span className="text-red-500">*</span>
+            </Label>
+            <select
+              id="hasCar"
+              className="w-full border rounded-md h-10 px-3 text-base"
+              value={hasCar ? "yes" : "no"}
+              onChange={(e) => setHasCar(e.target.value === "yes")}
+              required
+            >
+              <option value="yes">Yes</option>
+              <option value="no">No, I'd like to split with Uber/Lyft</option>
+            </select>
           </div>
 
           <div className="space-y-2">

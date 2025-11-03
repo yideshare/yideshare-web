@@ -35,6 +35,7 @@ async function main() {
       totalSeats: 4,
       currentTakenSeats: 0,
       isClosed: false,
+      hasCar: false,
     },
   });
 }

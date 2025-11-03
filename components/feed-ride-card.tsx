@@ -172,6 +172,9 @@ export default function FeedRideCard({
               </div>
             )}
             <div className="text-lg text-black mt-1">
+              Car: {ride.hasCar ? "Have a car" : "Willing to split with Uber/Lyft"}
+            </div>
+            <div className="text-lg text-black mt-1">
               Description:{" "}
               {ride.description
                 ? ride.description

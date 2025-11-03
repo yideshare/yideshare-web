@@ -53,6 +53,8 @@ export function TopBar({ onResults, rides }: TopBarProps) {
   const [phoneNumber, setPhoneNumber] = React.useState("");
   const [additionalPassengers, setAdditionalPassengers] = React.useState(3);
   const [description, setDescription] = React.useState("");
+  const [hasCar, setHasCar] = React.useState(false);
+
 
   // New state to track if a search is active
   const [hasSearched, setHasSearched] = React.useState(false);
@@ -67,6 +69,8 @@ export function TopBar({ onResults, rides }: TopBarProps) {
     organizerNameError: "",
     phoneNumberError: "",
   });
+
+
 
   // Easter Egg
   function checkHarvardRedirect(destination: string): boolean {
@@ -160,6 +164,7 @@ export function TopBar({ onResults, rides }: TopBarProps) {
       startTime: startTimeObject,
       endTime: endTimeObject,
       totalSeats: additionalPassengers + 1,
+      hasCar: hasCar
     };
 
     try {
@@ -191,6 +196,7 @@ export function TopBar({ onResults, rides }: TopBarProps) {
       setAdditionalPassengers(0);
       setDescription("");
       setDate(null);
+      setHasCar(false);
 
       // Show success toast
       toast({
@@ -434,6 +440,8 @@ export function TopBar({ onResults, rides }: TopBarProps) {
         description={description}
         setDescription={setDescription}
         handleShareYide={handleShareYide}
+        hasCar={hasCar}          
+        setHasCar={setHasCar} 
       />
     </div>
   );

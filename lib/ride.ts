@@ -18,6 +18,7 @@ export async function createRide(ride: Ride, netId: string) {
         totalSeats: ride.totalSeats || 4,
         currentTakenSeats: 0,
         isClosed: false,
+        hasCar: ride.hasCar ?? false,
       },
     });
     logger.info(`DB RIDE: Ride created by ${netId}, Details: `, newRide);

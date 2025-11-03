@@ -68,6 +68,10 @@ export default function EditRideDialog({
     additionalPassengers: ride.totalSeats - 1,
   });
 
+  const [hasCar, setHasCar] = React.useState<boolean>(ride.hasCar ?? false);
+  
+  ;
+
   const ready =
     formData.from &&
     formData.to &&
@@ -96,6 +100,7 @@ export default function EditRideDialog({
       totalSeats: formData.additionalPassengers + 1,
       ownerName: organizerName,
       ownerPhone: phoneNumber,
+      hasCar: hasCar
     };
     await onSave(updatedRide);
     setOpen(false);
@@ -200,6 +205,22 @@ export default function EditRideDialog({
                 isEndTime={true}
               />
             </div>
+          </div>
+
+         <div className="space-y-2">
+            <Label htmlFor="hasCar">
+              Do you have your own car? <span className="text-red-500">*</span>
+            </Label>
+            <select
+              id="hasCar"
+              className="w-full border rounded p-2 text-base"
+              value={hasCar ? "yes" : "no"}
+              onChange={(e) => setHasCar(e.target.value === "yes")}
+              required
+            >
+              <option value="yes">Yes</option>
+              <option value="no">No, I’d like to split with Uber/Lyft</option>
+            </select>
           </div>
 
           <div className="space-y-2">

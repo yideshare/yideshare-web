@@ -57,6 +57,7 @@ async function patchHandler(request: Request) {
       totalSeats: updatedRideData.totalSeats,
       ownerName: updatedRideData.ownerName,
       ownerPhone: updatedRideData.ownerPhone,
+      hasCar: updatedRideData.hasCar,
     },
   });
 

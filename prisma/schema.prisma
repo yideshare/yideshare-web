@@ -42,6 +42,7 @@ model Ride {
   totalSeats        Int
   currentTakenSeats Int
   isClosed          Boolean
+  hasCar            Boolean
 
   // many-to-one relationship with User
   ownerNetId String

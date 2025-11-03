@@ -5,7 +5,9 @@ export async function validateCASTicket(
   ticket: string,
   serviceUrl: string
 ): Promise<string | null> {
-  const validateUrl = `https://secure.its.yale.edu/cas/serviceValidate?ticket=${encodeURIComponent(
+  // const validateUrl = `https://secure.its.yale.edu/cas/serviceValidate?ticket=${encodeURIComponent(
+  const casBase = process.env.CAS_BASE_URL || "https://secure.its.yale.edu/cas";
+  const validateUrl = `${casBase}/serviceValidate?ticket=${encodeURIComponent(
     ticket
   )}&service=${encodeURIComponent(serviceUrl)}`;
 
