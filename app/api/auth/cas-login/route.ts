@@ -21,8 +21,7 @@ export async function GET(req: Request) {
     `${baseUrl}/api/auth/cas-validate` +
     (redirectPath ? `?redirect=${encodeURIComponent(redirectPath)}` : "");
 
-  const yaleCASUrl = `https://secure.its.yale.edu/cas/login?service=${encodeURIComponent(
-    serviceURL
-  )}`;
-  return NextResponse.redirect(yaleCASUrl);
+  const casBase = process.env.CAS_BASE_URL || "https://secure.its.yale.edu/cas";
+  const casLoginUrl = `${casBase}/login?service=${encodeURIComponent(serviceURL)}`;
+  return NextResponse.redirect(casLoginUrl);
 }
