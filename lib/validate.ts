@@ -5,7 +5,6 @@ export async function validateCASTicket(
   ticket: string,
   serviceUrl: string
 ): Promise<string | null> {
-  // const validateUrl = `https://secure.its.yale.edu/cas/serviceValidate?ticket=${encodeURIComponent(
   const casBase = process.env.CAS_BASE_URL || "https://secure.its.yale.edu/cas";
   const validateUrl = `${casBase}/serviceValidate?ticket=${encodeURIComponent(
     ticket
@@ -53,7 +52,6 @@ export async function createJWT(
   email: string,
   netId: string
 ): Promise<string> {
-
   const secret = process.env.JWT_SECRET;
   if (!secret) {
     throw new Error("JWT_SECRET is not defined in environment variables");
