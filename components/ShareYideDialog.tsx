@@ -132,7 +132,7 @@ export default function ShareYideDialog({
           }}
           className="space-y-2 sm:space-y-4"
         >
-          
+
           <div className="space-y-2">
             <Label htmlFor="organizer">Organizer name</Label>
             <Input
@@ -229,7 +229,7 @@ export default function ShareYideDialog({
               }
               options={[
                 { value: "yes", label: "Yes" },
-                { value: "no", label: "No, I’d like to split with Uber/Lyft" },
+                { value: "no", label: "No, I'd like to split with Uber/Lyft" },
               ]}
               value={hasCar ? "yes" : "no"}
               onChange={(value) => setHasCar(value === "yes")}
