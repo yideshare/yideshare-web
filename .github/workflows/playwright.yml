@@ -30,7 +30,7 @@ jobs:
       DIRECT_URL: postgresql://postgres:postgres@localhost:5432/yideshare_test
       NEXTAUTH_URL: http://localhost:3000
       NODE_ENV: test
-      # If your server code requires this, provide a dummy or a secret:
+      JWT_SECRET: meow-meow-nikita-was-here
       YALIES_API_KEY: ${{ secrets.YALIES_API_KEY }}
 
     steps:
