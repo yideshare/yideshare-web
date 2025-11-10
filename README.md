@@ -12,7 +12,7 @@ npm install
 
 Ensure your `.env` file includes the following variables for local dev:
 - `NODE_ENV=development`
-- `JWT_SECRET=test_jwt_secret`
+- `JWT_SECRET="test_jwt_secret"`
 - `POSTGRES_DB=come_up_with_your_db_name` 
 - `POSTGRES_PASSWORD=come_up_with_pwd`
 - `DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?schema=public`
