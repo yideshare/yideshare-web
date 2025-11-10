@@ -51,6 +51,7 @@ export function TopBar({ onResults, rides }: TopBarProps) {
   const [open, setOpen] = React.useState(false);
   const [organizerName, setOrganizerName] = React.useState("");
   const [phoneNumber, setPhoneNumber] = React.useState("");
+  const [useremail, setUseremail] = React.useState("");
   const [additionalPassengers, setAdditionalPassengers] = React.useState(3);
   const [description, setDescription] = React.useState("");
   const [hasCar, setHasCar] = React.useState(false);
@@ -435,6 +436,8 @@ export function TopBar({ onResults, rides }: TopBarProps) {
         setOrganizerName={setOrganizerName}
         phoneNumber={phoneNumber}
         setPhoneNumber={setPhoneNumber}
+        useremail={useremail}
+        setUseremail={setUseremail}
         additionalPassengers={additionalPassengers}
         setAdditionalPassengers={setAdditionalPassengers}
         description={description}

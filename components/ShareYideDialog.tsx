@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { CustomSelect } from "@/components/ui/select";
 import { TimeSelect } from "@/components/ui/time-select";
 import { CustomPhoneInput } from "@/components/ui/phone-input";
 
@@ -40,14 +41,14 @@ interface ShareYideDialogProps {
   phoneNumber: string;
   setPhoneNumber: (v: string) => void;
   // phoneNumberError?: string;
+  useremail: string;
+  setUseremail: (v: string) => void;
   additionalPassengers: number;
   setAdditionalPassengers: (v: number) => void;
   description: string;
   setDescription: (v: string) => void;
-
   hasCar: boolean;
   setHasCar: (v: boolean) => void;
-
   handleShareYide: (e: React.FormEvent) => Promise<void>;
 }
 
@@ -78,8 +79,36 @@ export default function ShareYideDialog({
     undefined
   );
 
+  const [meLoading, setMeLoading] = React.useState(true);
+  const [meError, setMeError] = React.useState<string | null>(null);
+  const [userEmail, setUserEmail] = React.useState("");
+  
+  React.useEffect(() => {
+    let ignore = false;
+    (async () => {
+      try {
+        setMeLoading(true);
+        setMeError(null);
+        const res = await fetch("/api/me", { method: "GET", cache: "no-store" });
+        if (!res.ok) throw new Error(`Failed to load user (${res.status})`);
+        const me = await res.json(); // { netId, name, email }
+        if (!ignore) {
+          if (me?.name) setOrganizerName(me.name);
+          if (me?.email) setUserEmail(me.email);
+        }
+      } catch (e: any) {
+        if (!ignore) setMeError(e?.message ?? "Failed to load user");
+      } finally {
+        if (!ignore) setMeLoading(false);
+      }
+    })();
+    return () => {
+      ignore = true;
+    };
+  }, [setOrganizerName]);
+
   const ready =
-    from && to && startTime && endTime && !phoneError && organizerName; //in future, can add more checks
+    from && to && startTime && endTime && organizerName; //in future, can add more checks 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -103,27 +132,39 @@ export default function ShareYideDialog({
           }}
           className="space-y-2 sm:space-y-4"
         >
+          
           <div className="space-y-2">
-            <Label htmlFor="organizer">
-              Organizer name <span className="text-red-500">*</span>{" "}
-            </Label>
+            <Label htmlFor="organizer">Organizer name</Label>
             <Input
               id="organizer"
               value={organizerName}
-              onChange={(e) => setOrganizerName(e.target.value)}
-              placeholder="John Doe"
-              required
+              readOnly
+              placeholder={meLoading ? "Loading..." : meError ? "Failed to load" : "Full name"}
               className="text-base"
             />
+            {meError && <p className="text-xs text-red-500">{meError}</p>}
           </div>
+
 
           <div className="space-y-2 text-base">
             <CustomPhoneInput
               label="Phone Number"
-              required
+              // required 
               value={phoneNumber}
               onChange={setPhoneNumber}
               onErrorChange={setPhoneError}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="email">Email Address</Label>
+            <Input
+              id="email"
+              type="email"
+              value={userEmail}
+              readOnly
+              placeholder={meLoading ? "Loading..." : meError ? "Failed to load" : "Email"}
+              className="text-base"
             />
           </div>
 
@@ -179,20 +220,20 @@ export default function ShareYideDialog({
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="hasCar">
-              Do you have your own car? <span className="text-red-500">*</span>
-            </Label>
-            <select
-              id="hasCar"
-              className="w-full border rounded-md h-10 px-3 text-base"
+          <div className="space-y-2 text-base">
+            <CustomSelect
+              label={
+                <>
+                  Do you have your own car? <span className="text-red-500">*</span>
+                </>
+              }
+              options={[
+                { value: "yes", label: "Yes" },
+                { value: "no", label: "No, I’d like to split with Uber/Lyft" },
+              ]}
               value={hasCar ? "yes" : "no"}
-              onChange={(e) => setHasCar(e.target.value === "yes")}
-              required
-            >
-              <option value="yes">Yes</option>
-              <option value="no">No, I'd like to split with Uber/Lyft</option>
-            </select>
+              onChange={(value) => setHasCar(value === "yes")}
+            />
           </div>
 
           <div className="space-y-2">

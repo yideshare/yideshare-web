@@ -33,7 +33,8 @@ model User {
 model Ride {
   rideId            String   @id @default(cuid())
   ownerName         String
-  ownerPhone        String
+  ownerEmail        String
+  ownerPhone        String?
   beginning         String
   destination       String
   description       String

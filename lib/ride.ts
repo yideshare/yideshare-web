@@ -3,12 +3,14 @@ import { Ride } from "@prisma/client";
 import { RideWhereClauseWithArrayAND } from "@/app/interface/main";
 import logger from "@/lib/logger";
 
-export async function createRide(ride: Ride, netId: string) {
+export async function createRide(ride: Ride, user: {netId: string; name: string; email: string }) {
   try {
     const newRide = await prisma.ride.create({
       data: {
-        ownerNetId: netId,
-        ownerName: ride.ownerName || "",
+        ownerNetId: user.netId,
+        // ownerName: ride.ownerName || "",
+        ownerName: user.name,
+        ownerEmail: user.email,
         ownerPhone: ride.ownerPhone || "",
         beginning: ride.beginning,
         destination: ride.destination,
@@ -21,7 +23,7 @@ export async function createRide(ride: Ride, netId: string) {
         hasCar: ride.hasCar ?? false,
       },
     });
-    logger.info(`DB RIDE: Ride created by ${netId}, Details: `, newRide);
+    logger.info(`DB RIDE: Ride created by ${user.netId}, Details: `, newRide);
     return newRide;
   } catch (error) {
     logger.error("DB RIDE: Error creating ride:", error);
