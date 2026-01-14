@@ -13,12 +13,12 @@ npm install
 Ensure your `.env` file includes the following variables for local dev:
 - `NODE_ENV=development`
 - `JWT_SECRET="test_jwt_secret"`
-- `POSTGRES_DB=come_up_with_your_db_name` 
-- `POSTGRES_PASSWORD=come_up_with_pwd`
+- `POSTGRES_DB=<come up with your db name>` 
+- `POSTGRES_PASSWORD=<come up with your password`
 - `DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?schema=public`
 - `DIRECT_URL=postgresql://postgres:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?schema=public`
 - `CAS_BASE_URL="https://secure-tst.its.yale.edu/cas"`
-- `YALIES_API_KEY` ask backend team
+- `YALIES_API_KEY=<ask admin team>`
 
 Build and start the Docker container:
 
