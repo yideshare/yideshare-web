@@ -11,7 +11,9 @@ export default async function Feed() {
     }
   
     /* ----------------  data  ---------------- */
-    const initialRides = await findManyRides(10);
+
+    const initialRidesLoaded = 500
+    const initialRides = await findManyRides(initialRidesLoaded);
     const bookmarks = await findBookmarkedRides(netId);
     const bookmarkedRideIds = bookmarks.map((b) => b.ride.rideId);
   
