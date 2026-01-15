@@ -5,22 +5,22 @@ import { jwtVerify } from "jose";
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // if authing the guy, let him though
-  if (pathname.startsWith("/api/auth")) {
+  // allow authentication or test utility apis
+  if (pathname.startsWith("/api/auth") || pathname.startsWith("/api/test-utils")) {
     return NextResponse.next();
   }
-
-  // try to get user cookie
-  const token = request.cookies.get("auth")?.value;
 
   // build CAS login url
   const intended = pathname + request.nextUrl.search;
   const loginUrl = new URL("/api/auth/cas-login", request.url);
   loginUrl.searchParams.set("redirect", intended);
 
-  // if they dont have the token we dont want them
+  // try to get auth token
+  const token = request.cookies.get("auth")?.value;
+
+  // redirect to login page if no token
   if (!token) {
-    // if youre an api we only see you as a friend
+    // block unauthorized api access
     if (pathname.startsWith("/api/")) {
       return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
@@ -31,21 +31,23 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    // bang your environment vars | var! asserts var != NULL
-    // might come back to bite you but we were never smart
+    // verify token
     const { payload } = await jwtVerify(
       token,
       new TextEncoder().encode(process.env.JWT_SECRET!)
     );
-    if (!payload) throw new Error("invalid token payload");
+    if (!payload) throw new Error("Token verification Failed!");
+    // allow request through
     return NextResponse.next();
   } catch {
+    // block api with bad token
     if (pathname.startsWith("/api/")) {
       return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { "content-type": "application/json" },
       });
     }
+    // return other bad token holders to login page
     return NextResponse.redirect(loginUrl);
   }
 }
