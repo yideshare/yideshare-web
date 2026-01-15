@@ -7,6 +7,10 @@ export class SetupTestUser {
     await this.page.goto("/feed");
   }
   async resetDatabase() {
-    await this.page.request.post("/api/test-utils/reset-db");
+    const response = await this.page.request.post("/api/test-utils/reset-db");
+    if (!response.ok()) {
+      throw new Error(`Database reset failed: ${response.status()}`);
+    }
+    await response.json();
   }
 }

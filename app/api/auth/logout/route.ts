@@ -7,19 +7,30 @@ function getBaseUrl(): string {
 }
 
 export async function GET() {
+  
   const baseUrl = getBaseUrl();
 
-  // response points to the login page
-  const response = NextResponse.redirect(
-    `https://secure.its.yale.edu/cas/logout?service=${baseUrl}/`
-  );
+  if (process.env.NODE_ENV === "production")
+  {
 
-  // clear all cookies
-  response.cookies.delete("user");
-  response.cookies.delete("session");
-  response.cookies.delete("session.sig");
-  response.cookies.delete("next-auth.session-token");
-  response.cookies.delete("next-auth.csrf-token");
+    // this will not redirect to base on localhost
+    const casLogoutUrl = `https://secure.its.yale.edu/cas/logout?service=${encodeURIComponent(baseUrl)}`;
+    const response = NextResponse.redirect(casLogoutUrl);
 
-  return response;
+    // currently only storing auth cookies
+    response.cookies.delete("auth");
+
+    return response;
+  } 
+  else 
+  {
+    // just redirect to base, cannot gracefully destroy sso session
+    const response = NextResponse.redirect(baseUrl);
+    response.cookies.delete("auth");
+
+    return response;
+  }
+
+  
+  
 }
