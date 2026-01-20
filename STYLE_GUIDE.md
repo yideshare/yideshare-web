@@ -945,8 +945,8 @@ import { format } from "date-fns";
 import { cn } from "@/lib/frontend";
 import { calculateDistance } from "@/lib/ride";
 
-import { SearchBar } from "@/components/search-bar";
-import { RideCard } from "@/components/feed-ride-card";
+import { SearchBar } from "@/components/search";
+import { FeedRideCard } from "@/components/feed";
 
 import type { User } from "@/app/interface/main";
 import type { RideData } from "@/lib/ride";
