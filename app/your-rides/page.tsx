@@ -12,8 +12,9 @@ export default async function DashboardPage() {
     redirect(`/api/auth/cas-login?next=${encodeURIComponent("/your-rides")}`);
   }
 
+  const numOwnedRides = 100
   const ownedRides = await prisma.ride.findMany({
-    take: 6,
+    take: numOwnedRides,
     where: { ownerNetId: netId, isClosed: false },
     orderBy: { startTime: "desc" },
   });

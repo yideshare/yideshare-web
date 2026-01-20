@@ -20,7 +20,7 @@ import { FeedRideCardProps } from "@/app/interface/main";
 import { DateTime } from "luxon";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "";
-export default function FeedRideCard({
+export function FeedRideCard({
   ride,
   isBookmarkedInitial,
   showDialog = true,

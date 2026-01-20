@@ -1,4 +1,4 @@
-import FeedRideCard from "@/components/feed-ride-card";
+import { FeedRideCard } from "@/components/feed";
 import { Ride } from "@prisma/client";
 import React from "react";
 import { Trash2, Pencil } from "lucide-react";

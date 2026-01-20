@@ -48,7 +48,7 @@ interface ShareYideDialogProps {
   handleShareYide: (e: React.FormEvent) => Promise<void>;
 }
 
-export default function ShareYideDialog({
+export function ShareYideDialog({
   open,
   setOpen,
   from,

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { usePathname } from "next/navigation";
-import { TopNavButtons } from "@/components/top-nav-buttons";
+import { TopNavButtons } from "@/components/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,

@@ -42,7 +42,7 @@ interface EditRideDialogProps {
   onSave: (updatedRide: Partial<Ride>) => Promise<void>;
 }
 
-export default function EditRideDialog({
+export function EditRideDialog({
   open,
   setOpen,
   ride,

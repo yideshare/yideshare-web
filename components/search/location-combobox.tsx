@@ -20,7 +20,7 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 
-import { LOCATIONS as INITIAL_LOCATIONS, LocationItem } from "./location-data";
+import { LOCATIONS as INITIAL_LOCATIONS, LocationItem } from "@/components/common/location-data";
 
 interface LocationComboboxProps {
   label: string;
