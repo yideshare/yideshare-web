@@ -26,6 +26,7 @@ async function main() {
         connect: { netId: user.netId }, // Connect instead of create
       },
       ownerName: user.name,
+      ownerEmail: user.email,
       ownerPhone: "123-456-7890",
       beginning: "Yale",
       destination: "Hartford",
@@ -35,6 +36,7 @@ async function main() {
       totalSeats: 4,
       currentTakenSeats: 0,
       isClosed: false,
+      hasCar: false,
     },
   });
 }

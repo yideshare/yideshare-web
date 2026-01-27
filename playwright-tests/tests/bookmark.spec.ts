@@ -14,17 +14,16 @@ export async function bookmarkAndCheckSaved(page: any) {
   await rideFunctions.createValidRideViaPopup();
   await page.getByRole("button").nth(3).click();
   await page.getByRole("button").nth(3).click();
-
   await page.getByRole("link", { name: "Saved Rides" }).click();
 }
 
 test("Bookmark a ride, shows up in Saved Rides", async ({ page }) => {
   await bookmarkAndCheckSaved(page);
-  await expect(page.getByText("Bob Dylan")).toBeVisible();
+  await expect(page.getByText("Test User")).toBeVisible();
 });
 test("Unbookmark a ride, does not show up in Saved Rides", async ({ page }) => {
   await bookmarkAndCheckSaved(page);
 
   await page.getByRole("button").nth(1).click();
-  await expect(page.getByText("Bob Dylan")).not.toBeVisible();
+  await expect(page.getByText("Test User")).not.toBeVisible();
 });

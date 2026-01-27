@@ -48,6 +48,7 @@ prisma/migrations
 # playwright tests
 /playwright-tests/playwright-report/
 /playwright-tests/test-results/
+/test-results
 
 /playwright-tests/blob-report/
 /playwright-tests/playwright/.cache/

@@ -18,6 +18,7 @@ import { Ride } from "@prisma/client";
 import { useState } from "react";
 import { CustomPhoneInput } from "@/components/ui/phone-input";
 import { createStartEndDateTimes, formatTimeForDisplay } from "@/lib/time";
+import { CustomSelect} from "@/components/ui/select";
 
 // logic flow that handles next-day scenarios
 const createUpdatedTimes = (
@@ -68,14 +69,17 @@ export function EditRideDialog({
     additionalPassengers: ride.totalSeats - 1,
   });
 
+  const [hasCar, setHasCar] = React.useState<boolean>(ride.hasCar ?? false);
+  
+  ;
+
   const ready =
     formData.from &&
     formData.to &&
     formData.startTime &&
     formData.endTime &&
     formData.additionalPassengers &&
-    organizerName &&
-    !phoneError;
+    organizerName;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,11 +100,41 @@ export function EditRideDialog({
       totalSeats: formData.additionalPassengers + 1,
       ownerName: organizerName,
       ownerPhone: phoneNumber,
+      hasCar: hasCar
     };
     await onSave(updatedRide);
     setOpen(false);
   };
 
+
+    const [meLoading, setMeLoading] = React.useState(true);
+    const [meError, setMeError] = React.useState<string | null>(null);
+    const [userEmail, setUserEmail] = React.useState("");
+    
+    React.useEffect(() => {
+      let ignore = false;
+      (async () => {
+        try {
+          setMeLoading(true);
+          setMeError(null);
+          const res = await fetch("/api/me", { method: "GET", cache: "no-store" });
+          if (!res.ok) throw new Error(`Failed to load user (${res.status})`);
+          const me = await res.json(); // { netId, name, email }
+          if (!ignore) {
+            if (me?.name) setOrganizerName(me.name);
+            if (me?.email) setUserEmail(me.email);
+          }
+        } catch (e: any) {
+          if (!ignore) setMeError(e?.message ?? "Failed to load user");
+        } finally {
+          if (!ignore) setMeLoading(false);
+        }
+      })();
+      return () => {
+        ignore = true;
+      };
+    }, [setOrganizerName]);
+  
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -117,29 +151,39 @@ export function EditRideDialog({
 
         <form onSubmit={handleSubmit} className="space-y-2 sm:space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="organizer">
-              Organizer name <span className="text-red-500">*</span>{" "}
-            </Label>
+            <Label htmlFor="organizer">Organizer name</Label>
             <Input
               id="organizer"
               value={organizerName}
-              onChange={(e) => setOrganizerName(e.target.value)}
-              required
-              placeholder="John Doe"
+              readOnly
+              placeholder={meLoading ? "Loading..." : meError ? "Failed to load" : "Full name"}
               className="text-base"
             />
+            {meError && <p className="text-xs text-red-500">{meError}</p>}
           </div>
 
           <div className="space-y-2 text-base">
             <CustomPhoneInput
               label="Phone Number"
-              required
+              // required
               value={phoneNumber}
               onChange={setPhoneNumber}
               onErrorChange={setPhoneError}
             />
           </div>
 
+          <div className="space-y-2">
+            <Label htmlFor="email">Email Address</Label>
+            <Input
+              id="email"
+              type="email"
+              value={userEmail}
+              readOnly
+              placeholder={meLoading ? "Loading..." : meError ? "Failed to load" : "Email"}
+              className="text-base"
+            />
+          </div>
+          
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-2">
               <Label htmlFor="from">
@@ -200,6 +244,22 @@ export function EditRideDialog({
                 isEndTime={true}
               />
             </div>
+          </div>
+
+          <div className="space-y-2 text-base">
+            <CustomSelect
+              label={
+                <>
+                  Do you have your own car? <span className="text-red-500">*</span>
+                </>
+              }
+              options={[
+                { value: "yes", label: "Yes" },
+                { value: "no", label: "No, I’d like to split with Uber/Lyft" },
+              ]}
+              value={hasCar ? "yes" : "no"}
+              onChange={(value) => setHasCar(value === "yes")}
+            />
           </div>
 
           <div className="space-y-2">

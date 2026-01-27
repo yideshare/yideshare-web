@@ -11,22 +11,22 @@ test.beforeEach(async ({ context, page }) => {
 
 test("Search Ride - exact posting time", async ({ page }) => {
   await helper(page, "12:00 AM", "01:00 AM");
-  await expect(page.getByText("Bob Dylan")).toBeVisible({ timeout: 10000 });
+  await expect(page.getByText("Test User")).toBeVisible({ timeout: 10000 });
 });
 
 test("Search Ride - time in range (within 15 minutes)", async ({ page }) => {
   await helper(page, "12:15 AM", "01:15 AM");
-  await expect(page.getByText("Bob Dylan")).toBeVisible({ timeout: 10000 });
+  await expect(page.getByText("Test User")).toBeVisible({ timeout: 10000 });
 });
 
 test("Search Ride - time overlapping window", async ({ page }) => {
   await helper(page, "12:15 AM", "12:45 AM");
-  await expect(page.getByText("Bob Dylan")).toBeVisible({ timeout: 10000 });
+  await expect(page.getByText("Test User")).toBeVisible({ timeout: 10000 });
 });
 
 test("Search Ride - time out of range", async ({ page }) => {
   await helper(page, "01:15 AM", "02:15 AM");
-  await expect(page.getByText("Bob Dylan")).toBeHidden();
+  await expect(page.getByText("Test User")).toBeHidden();
 });
 
 test("Search Ride - from only filter", async ({ page }) => {
@@ -42,7 +42,7 @@ test("Search Ride - from only filter", async ({ page }) => {
   await departureInput.press("Enter");
 
   await page.getByRole("button", { name: "Search" }).click();
-  await expect(page.getByText("Bob Dylan")).toBeVisible();
+  await expect(page.getByText("Test User")).toBeVisible();
 });
 
 test("Search Ride - to only filter", async ({ page }) => {
@@ -58,7 +58,7 @@ test("Search Ride - to only filter", async ({ page }) => {
   await destinationInput.press("Enter");
 
   await page.getByRole("button", { name: "Search" }).click();
-  await expect(page.getByText("Bob Dylan")).toBeVisible();
+  await expect(page.getByText("Test User")).toBeVisible();
 });
 
 test("Search Ride - date only filter (today)", async ({ page }) => {
@@ -67,14 +67,14 @@ test("Search Ride - date only filter (today)", async ({ page }) => {
   await rideFunctions.selectDepartureDateToday();
 
   await page.getByRole("button", { name: "Search" }).click();
-  await expect(page.getByText("Bob Dylan")).toBeVisible();
+  await expect(page.getByText("Test User")).toBeVisible();
 });
 
 test("Search Ride - time only equal start=end treated as point-in-time", async ({
   page,
 }) => {
   await helper(page, "12:30 AM", "12:30 AM");
-  await expect(page.getByText("Bob Dylan")).toBeVisible();
+  await expect(page.getByText("Test User")).toBeVisible();
 });
 
 async function helper(page: any, startTime: string, endTime: string) {

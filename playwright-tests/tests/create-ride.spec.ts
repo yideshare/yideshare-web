@@ -36,6 +36,6 @@ test("Create Valid Ride", async ({ page }) => {
   const rideFunctions = new RideFunctions(page);
   await rideFunctions.createValidRideViaPopup();
   await expect(page.getByRole("link", { name: "Yideshare" })).toBeVisible();
-  await expect(page.getByText("Bob Dylan")).toBeVisible();
+  await expect(page.getByText("Test User")).toBeVisible();
 });
 //TODO: create invalid ride tests

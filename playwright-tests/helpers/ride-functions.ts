@@ -52,10 +52,16 @@ export class RideFunctions {
     const dialog = this.page.getByRole("dialog");
     await expect(dialog).toBeVisible();
 
-    await dialog
-      .getByRole("textbox", { name: /organizer name/i })
-      .fill("Bob Dylan");
+    const nameInput = dialog.getByRole("textbox", { name: /organizer name/i });
+    await expect(nameInput).toHaveAttribute("readonly", "");
+    await expect(nameInput).toHaveValue(/.+/);
+
     await dialog.locator('input[type="tel"]').fill("+1 615 123 4567");
+
+    const emailInput = dialog.getByRole("textbox", { name: /email address/i });
+    await expect(emailInput).toHaveAttribute("readonly", "");
+    await expect(emailInput).toHaveValue(/@/);
+    
     await dialog
       .getByRole("textbox", { name: /leaving from \*/i })
       .fill("Vegas");
@@ -66,6 +72,9 @@ export class RideFunctions {
 
     await dialog.getByRole("combobox").filter({ hasText: /--:--/ }).click();
     await this.page.getByRole("option", { name: "01:00 AM" }).click();
+
+    await dialog.getByRole("combobox").nth(3).click();
+    await this.page.getByRole("option", { name: /^yes$/i }).click();
 
     await dialog
       .getByRole("spinbutton", { name: /number of open seats \*/i })

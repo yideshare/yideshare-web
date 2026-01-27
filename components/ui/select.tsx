@@ -157,3 +157,33 @@ export {
   SelectScrollUpButton,
   SelectScrollDownButton,
 };
+
+interface CustomSelectProps {
+  label: React.ReactNode;
+  options: { value: string; label: string }[];
+  value: string;
+  onChange: (v: string) => void;
+}
+
+export function CustomSelect({ label, options, value, onChange }: CustomSelectProps) {
+  return (
+    <div className="space-y-2 text-base">
+      <div className="space-y-2">
+        <p className="mb-1 text-sm font-medium">{label}</p>
+        <Select value={value} onValueChange={onChange}>
+          <SelectTrigger className="h-10 w-full">
+            {/* changed to w-full from w-[140px] to allow for full width for text */}
+            <SelectValue placeholder="Select an option" />
+          </SelectTrigger>
+          <SelectContent>
+            {options.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
+  );
+}

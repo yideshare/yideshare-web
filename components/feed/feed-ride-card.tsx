@@ -35,6 +35,7 @@ export function FeedRideCard({
 
   /* ------------ helpers ------------ */
   const ownerName = ride.ownerName ?? "Driver";
+  const ownerEmail = ride.ownerEmail ?? "No email provided";
   const totalSeats = ride.totalSeats;
 
   const zone = "America/New_York";
@@ -118,9 +119,10 @@ export function FeedRideCard({
           <div className="flex flex-col gap-1 text-black">
             <span className="text-lg sm:text-xl">{ownerName}</span>
             <span className="text-sm sm:text-xl text-black break-all">
-              {ride.ownerPhone
+              {/* {ride.ownerPhone
                 ? formatPhoneNumberIntl(ride.ownerPhone)
-                : "No phone provided"}
+                : "No phone provided"} */}
+            <span className ="text-lg sm:text-xl">{ownerEmail}</span>
             </span>
           </div>
         </div>
@@ -171,6 +173,9 @@ export function FeedRideCard({
                 Phone: {formatPhoneNumberIntl(ride.ownerPhone)}
               </div>
             )}
+            <div className="text-lg text-black mt-1">
+              Car: {ride.hasCar ? "Have a car" : "Willing to split with Uber/Lyft"}
+            </div>
             <div className="text-lg text-black mt-1">
               Description:{" "}
               {ride.description

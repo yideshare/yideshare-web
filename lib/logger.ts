@@ -1,4 +1,6 @@
 import { createLogger, format, transports } from "winston";
+import fs from "node:fs";
+import path from "node:path";
 
 const globalForLogger = global as unknown as {
     logger: ReturnType<typeof createLogger> | undefined 
@@ -23,8 +25,8 @@ const logger = globalForLogger.logger ?? createLogger({
 
 // Only add file transports in development
 if (process.env.NODE_ENV !== "production") {
-  const fs = require("fs");
-  const path = require("path");
+  // const fs = require("fs");
+  // const path = require("path");
   
   const logDir = path.join(process.cwd(), "logs");
   if (!fs.existsSync(logDir)) {
