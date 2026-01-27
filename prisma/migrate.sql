@@ -51,7 +51,7 @@ WHERE table_schema = 'public'
   AND column_name = 'ownerEmail';
 
 COMMIT;
--- 🛑 ROLLBACK; -- Run this only if the column was not added correctly.
+-- ROLLBACK; -- Run this only if the column was not added correctly.
 
 
 -- ==========================================
@@ -85,7 +85,7 @@ WHERE "ownerEmail" IS NOT NULL
 LIMIT 10;
 
 COMMIT;
--- 🛑 ROLLBACK; -- Run this if the emails look wrong or update failed.
+-- ROLLBACK; -- Run this if the emails look wrong or update failed.
 
 
 -- ==========================================
@@ -105,7 +105,7 @@ SELECT COUNT(*) as null_count
 FROM "Ride"
 WHERE "ownerEmail" IS NULL;
 
--- 🛑 IMPORTANT DECISION POINT:
+-- IMPORTANT DECISION POINT:
 -- If "null_count" is 0, execute COMMIT;
 -- If "null_count" > 0, execute ROLLBACK; and investigate why some users don't have emails.
 COMMIT;
@@ -124,7 +124,7 @@ SELECT COUNT(*) FROM "Ride" WHERE "ownerEmail" IS NULL;
 ALTER TABLE "Ride" ALTER COLUMN "ownerEmail" SET NOT NULL;
 
 COMMIT;
--- 🛑 ROLLBACK; -- Run this if PostgreSQL throws a violation error.
+-- ROLLBACK; -- Run this if PostgreSQL throws a violation error.
 
 
 -- ==========================================
@@ -140,7 +140,7 @@ FROM "Ride"
 LIMIT 5;
 
 COMMIT;
--- 🛑 ROLLBACK; -- Run this if the default value isn't setting correctly.
+-- ROLLBACK; -- Run this if the default value isn't setting correctly.
 
 
 -- ==========================================
@@ -160,7 +160,7 @@ WHERE table_schema = 'public'
 -- Expectation: is_nullable should be 'YES'
 
 COMMIT; 
--- 🛑 ROLLBACK; -- Run this if is_nullable is still 'NO'.
+-- ROLLBACK; -- Run this if is_nullable is still 'NO'.
 
 
 -- ==========================================
