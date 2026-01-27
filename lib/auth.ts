@@ -1,13 +1,13 @@
-import logger from "./logger";
+import logger from "./infra/logger";
 import { SignJWT } from "jose";
 
 export async function validateCASTicket(
   ticket: string,
-  serviceUrl: string
+  serviceUrl: string,
 ): Promise<string | null> {
   const casBase = process.env.CAS_BASE_URL || "https://secure.its.yale.edu/cas";
   const validateUrl = `${casBase}/serviceValidate?ticket=${encodeURIComponent(
-    ticket
+    ticket,
   )}&service=${encodeURIComponent(serviceUrl)}`;
 
   const res = await fetch(validateUrl, { cache: "no-store" });
@@ -31,7 +31,7 @@ export async function validateCASTicket(
   } else if (text.includes("<cas:authenticationFailure>")) {
     // Extract error message from failure response
     const errorMatch = text.match(
-      /<cas:authenticationFailure[^>]*>(.*?)<\/cas:authenticationFailure>/
+      /<cas:authenticationFailure[^>]*>(.*?)<\/cas:authenticationFailure>/,
     );
     const errorMessage = errorMatch
       ? errorMatch[1]
@@ -50,7 +50,7 @@ export async function createJWT(
   firstName: string,
   lastName: string,
   email: string,
-  netId: string
+  netId: string,
 ): Promise<string> {
   const secret = process.env.JWT_SECRET;
   if (!secret) {
@@ -72,4 +72,21 @@ export async function createJWT(
 export async function extractRideIdFromPayload(req: Request) {
   const body = await req.json();
   return body.rideId ? body.rideId : null;
+}
+
+export async function fetchYaliesData(netId: string) {
+  // fetch from yalies
+  const response = await fetch("https://api.yalies.io/v2/people", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.YALIES_API_KEY}`,
+    },
+    // netid refers to the query parameter, netId refers to the string parameter
+    body: JSON.stringify({ query: "", filters: { netid: netId } }),
+  });
+
+  // decode the response
+  const data = await response.json();
+  return data.length > 0 ? data[0] : null;
 }

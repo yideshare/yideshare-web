@@ -1,14 +1,14 @@
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/db";
+import { logger } from "@/lib/infra";
 import { cookies } from "next/headers";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { jwtVerify } from "jose";
-import logger from "@/lib/logger";
 
 export async function findOrCreateUser(
   netId: string,
   firstName: string,
   lastName: string,
-  email: string
+  email: string,
 ) {
   // try to find user
   let user = await prisma.user.findUnique({ where: { netId } });
@@ -62,7 +62,6 @@ export async function getUserFromCookies(cookieStore: ReadonlyRequestCookies) {
 
 // chat helped here, check
 export async function getUserNetIdFromCookies() {
-
   // retrieve cookies
   const cookieStore = await cookies();
   // parse value
@@ -70,7 +69,10 @@ export async function getUserNetIdFromCookies() {
   if (!token) return null;
 
   try {
-    const { payload } = await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET!));
+    const { payload } = await jwtVerify(
+      token,
+      new TextEncoder().encode(process.env.JWT_SECRET!),
+    );
     return (payload as any).netId ?? null;
   } catch {
     return null;

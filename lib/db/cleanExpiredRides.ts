@@ -1,5 +1,5 @@
-import { prisma } from '@/lib/prisma'; 
-import  logger  from '@/lib/logger';
+import { prisma } from "@/lib/db";
+import { logger } from "@/lib/infra"
 
 // add this to a vercel cron script when deployed
 
@@ -21,7 +21,6 @@ async function closeExpiredRides() {
   logger.info(`DB RIDE: Closed ${result.count} expired rides.`);
 }
 
-closeExpiredRides()
-  .catch((error) => {
-    logger.error('DB RIDE: Error closing expired rides:', error);
-  });
+closeExpiredRides().catch((error) => {
+  logger.error("DB RIDE: Error closing expired rides:", error);
+});
