@@ -2,11 +2,9 @@
 
 import * as React from "react";
 import { Separator } from "@/components/ui/separator";
-import { FeedHeader } from "@/components/ui/FeedHeader";
-import { FeedSortBar } from "@/components/ui/FeedSortBar";
-import { FeedList } from "@/components/ui/FeedList";
+import { FeedHeader, FeedSortBar, FeedList } from "@/components/feed";
 import { useSortedRides } from "@/lib/useSortedRides";
-import EditRideDialog from "@/components/EditRideDialog";
+import { EditRideDialog } from "@/components/rides";
 import { useToast } from "@/hooks/use-toast";
 import { Ride } from "@prisma/client";
 
@@ -34,7 +32,7 @@ export default function YourRidesClient({
 
   const handleDeleteRide = async (rideId: string) => {
     try {
-      const res = await fetch(`${API_BASE}/api/update-ride?rideId=${rideId}`, {
+      const res = await fetch(`${API_BASE}/api/rides/update?rideId=${rideId}`, {
         method: "DELETE",
       });
 
@@ -66,7 +64,7 @@ export default function YourRidesClient({
 
     try {
       const res = await fetch(
-        `${API_BASE}/api/update-ride?rideId=${editingRide.rideId}`,
+        `${API_BASE}/api/rides/update?rideId=${editingRide.rideId}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -110,7 +108,7 @@ export default function YourRidesClient({
             showDialog={false}
             hideBookmark={true}
             editable
-            onEdit={(ride) => {
+            onEdit={(ride: Ride) => {
               setEditingRide(ride);
               setIsEditDialogOpen(true);
             }}

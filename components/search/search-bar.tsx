@@ -2,7 +2,7 @@
 
 import { Input } from "@/components/ui/input"
 
-export default function SearchBar() {
+export function SearchBar() {
   return (
     <div className="text-center">
       <Input

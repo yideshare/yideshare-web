@@ -17,11 +17,11 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const redirectPath = searchParams.get("redirect") || "";
 
+  const casBase = process.env.CAS_BASE_URL || "https://secure.its.yale.edu/cas";
   const serviceURL =
     `${baseUrl}/api/auth/cas-validate` +
     (redirectPath ? `?redirect=${encodeURIComponent(redirectPath)}` : "");
 
-  const casBase = process.env.CAS_BASE_URL || "https://secure.its.yale.edu/cas";
   const casLoginUrl = `${casBase}/login?service=${encodeURIComponent(serviceURL)}`;
   return NextResponse.redirect(casLoginUrl);
 }

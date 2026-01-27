@@ -17,11 +17,10 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
-
 import { TimeSelect } from "@/components/ui/time-select";
-import { LocationCombobox } from "@/components/location-combobox";
+import { LocationCombobox } from "@/components/search";
 import { createStartEndDateTimes, isNextDay } from "@/lib/time";
-import ShareYideDialog from "./ShareYideDialog";
+import { ShareYideDialog } from "@/components/rides";
 import { DateTime } from "luxon";
 
 import { Ride } from "@prisma/client";
@@ -117,7 +116,7 @@ export function TopBar({ onResults, rides }: TopBarProps) {
     const qs = params.toString();
 
     try {
-      const res = await fetch(`/api/search-rides?${qs}`);
+      const res = await fetch(`/api/rides/search?${qs}`);
       if (!res.ok) throw new Error("Network error");
       const ridesResult: Ride[] = await res.json();
       onResults(ridesResult);
@@ -169,7 +168,7 @@ export function TopBar({ onResults, rides }: TopBarProps) {
     };
 
     try {
-      const res = await fetch(`${API_BASE}/api/post-ride`, {
+      const res = await fetch(`${API_BASE}/api/rides/post`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(rideData),

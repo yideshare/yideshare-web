@@ -74,27 +74,6 @@ export async function findManyRides(quantity: number) {
   });
 }
 
-export async function findOwnedRide(netId: string) {
-  return prisma.ride.findMany({
-    where: {
-      ownerName: netId,
-    },
-    orderBy: {
-      startTime: "desc",
-    },
-    select: {
-      rideId: true,
-      beginning: true,
-      destination: true,
-      startTime: true,
-      endTime: true,
-      totalSeats: true,
-      currentTakenSeats: true,
-      isClosed: true,
-    },
-  });
-}
-
 export async function findBookmarkedRides(netId: string) {
   return prisma.bookmark.findMany({
     where: { netId },

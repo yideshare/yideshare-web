@@ -1,7 +1,7 @@
 import localFont from 'next/font/local';
 
 export const righteous = localFont({
-  src: '../fonts/Righteous-Regular.ttf', // ✅ points to the *real* file
+  src: '../fonts/Righteous-Regular.ttf',
   display: 'swap',
   variable: '--font-righteous',
 });

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ApiError } from "@/lib/withApiErrorHandler";
+import { createJWT } from "@/lib/validate";
 
 async function testLoginHandler() {
   const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
@@ -18,15 +19,21 @@ async function testLoginHandler() {
   });
 
   const response = NextResponse.redirect(`${baseUrl}/feed`);
-  response.cookies.set(
-    "user",
-    JSON.stringify({
-      name: "Test User",
-      email: "test.user@yale.edu",
-      netId: "testuser",
-    }),
-    { httpOnly: false, path: "/" }
-  );
+
+  // set auth cookie
+  const jwt_signed = await createJWT("Test", "User", "test.user@yale.edu", "testuser");
+
+  response.cookies.set("auth", jwt_signed, {
+    httpOnly: true, 
+    path: "/",
+    secure: baseUrl.startsWith("https"),
+    sameSite: "lax",
+    // for the LOVE OF GOD PLEASE make sure this matches the expiry of the token
+    // cookies and token go bad at the same time --> life easy :)
+    // set for 1h to match the fallback JWT_EXPIRES_IN value
+    maxAge: 60 * 60,
+  });
+
   return response;
 }
 
