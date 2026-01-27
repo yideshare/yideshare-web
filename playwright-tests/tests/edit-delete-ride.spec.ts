@@ -13,14 +13,14 @@ test("Created ride shows up in Your Rides", async ({ page }) => {
   const rideFunctions = new RideFunctions(page);
   await rideFunctions.createValidRideViaPopup();
   await page.getByRole("link", { name: "My Posts" }).click();
-  await expect(page.getByText("Bob Dylan").first()).toBeVisible();
+  await expect(page.getByText("Test User").first()).toBeVisible();
 });
 test("Delete Ride", async ({ page }) => {
   const rideFunctions = new RideFunctions(page);
   await rideFunctions.createValidRideViaPopup();
   await page.getByRole("link", { name: "My Posts" }).click();
   await page.getByRole("button", { name: "Delete" }).click();
-  await expect(page.getByText("Bob Dylan").first()).not.toBeVisible();
+  await expect(page.getByText("Test User").first()).not.toBeVisible();
 });
 test("Edit Ride Destination", async ({ page }) => {
   const rideFunctions = new RideFunctions(page);
