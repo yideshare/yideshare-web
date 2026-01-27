@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { ApiError } from "@/lib/withApiErrorHandler";
-import { createJWT } from "@/lib/validate";
+import { prisma } from "@/lib/db";
+import { ApiError } from "@/lib/infra";
+import { createJWT } from "@/lib/auth";
 
 async function testLoginHandler() {
   const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
@@ -21,10 +21,15 @@ async function testLoginHandler() {
   const response = NextResponse.redirect(`${baseUrl}/feed`);
 
   // set auth cookie
-  const jwt_signed = await createJWT("Test", "User", "test.user@yale.edu", "testuser");
+  const jwt_signed = await createJWT(
+    "Test",
+    "User",
+    "test.user@yale.edu",
+    "testuser",
+  );
 
   response.cookies.set("auth", jwt_signed, {
-    httpOnly: true, 
+    httpOnly: true,
     path: "/",
     secure: baseUrl.startsWith("https"),
     sameSite: "lax",

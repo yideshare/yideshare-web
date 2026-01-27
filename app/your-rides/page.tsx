@@ -1,9 +1,7 @@
 // yideshare/app/your-rides/page.tsx
 import { redirect } from "next/navigation";
-import { prisma } from "@/lib/prisma";
+import { prisma, findBookmarkedRides, getUserNetIdFromCookies } from "@/lib/db";
 import YourRidesClient from "./your-rides-client";
-import { findBookmarkedRides } from "@/lib/ride";
-import { getUserNetIdFromCookies } from "@/lib/user";
 
 export default async function DashboardPage() {
   // server-side: verify httpOnly JWT w/ updated helper, chat helped with this sorry guys desperate times

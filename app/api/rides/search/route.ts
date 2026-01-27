@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { findFilteredRides } from "@/lib/ride";
-import { createStartEndDateTimes, decodeDate } from "@/lib/time";
-import { withApiErrorHandler } from "@/lib/withApiErrorHandler";
+import { findFilteredRides } from "@/lib/db";
+import { withApiErrorHandler } from "@/lib/infra";
+import { createStartEndDateTimes, decodeDate } from "@/lib/parsers";
 import { DateTime } from "luxon";
 
 async function getHandler(request: Request) {
@@ -36,7 +36,7 @@ async function getHandler(request: Request) {
     const { startTimeObject, endTimeObject } = createStartEndDateTimes(
       dateObject,
       startTime,
-      endTime
+      endTime,
     );
     filterStartTime = startTimeObject;
     filterEndTime = endTimeObject;
@@ -80,10 +80,10 @@ async function getHandler(request: Request) {
     };
     const intervalsOverlap = (
       a: Array<[number, number]>,
-      b: Array<[number, number]>
+      b: Array<[number, number]>,
     ) =>
       a.some(([as, ae]) =>
-        b.some(([bs, be]) => Math.min(ae, be) > Math.max(as, bs))
+        b.some(([bs, be]) => Math.min(ae, be) > Math.max(as, bs)),
       );
 
     const reqStartMin = parseTimeToMinutes(startTime);

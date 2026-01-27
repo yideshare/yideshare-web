@@ -4,7 +4,7 @@
 "use client";
 
 import * as React from "react";
-import { cn } from "@/lib/general";
+import { cn } from "@/lib/frontend";
 
 const Textarea = React.forwardRef<
   HTMLTextAreaElement,

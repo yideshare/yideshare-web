@@ -7,8 +7,12 @@ import { ChevronsUpDown } from "lucide-react";
 
 // import debounce from "lodash.debounce";
 
-import { encodeDate } from "@/lib/time";
-import { useToast } from "@/hooks/use-toast";
+import {
+  encodeDate,
+  createStartEndDateTimes,
+  isNextDay,
+} from "@/lib/parsers/time";
+import { useToast } from "@/hooks/useToast";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -17,9 +21,9 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
+
 import { TimeSelect } from "@/components/ui/time-select";
 import { LocationCombobox } from "@/components/search";
-import { createStartEndDateTimes, isNextDay } from "@/lib/time";
 import { ShareYideDialog } from "@/components/rides";
 import { DateTime } from "luxon";
 
@@ -152,7 +156,7 @@ export function TopBar({ onResults, rides }: TopBarProps) {
     const { startTimeObject, endTimeObject } = createStartEndDateTimes(
       selectedDate,
       startTime,
-      endTime
+      endTime,
     );
 
     const rideData = {
@@ -282,7 +286,7 @@ export function TopBar({ onResults, rides }: TopBarProps) {
                       month: d.getMonth() + 1,
                       day: d.getDate(),
                     },
-                    { zone: timeZone }
+                    { zone: timeZone },
                   ).startOf("day");
                   const etToday = DateTime.now()
                     .setZone(timeZone)
@@ -298,7 +302,7 @@ export function TopBar({ onResults, rides }: TopBarProps) {
                       month: selectedDate.getMonth() + 1,
                       day: selectedDate.getDate(),
                     },
-                    { zone: timeZone }
+                    { zone: timeZone },
                   ).startOf("day");
                   const etToday = DateTime.now()
                     .setZone(timeZone)

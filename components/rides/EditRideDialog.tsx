@@ -17,7 +17,7 @@ import { TimeSelect } from "@/components/ui/time-select";
 import { Ride } from "@prisma/client";
 import { useState } from "react";
 import { CustomPhoneInput } from "@/components/ui/phone-input";
-import { createStartEndDateTimes, formatTimeForDisplay } from "@/lib/time";
+import { createStartEndDateTimes, formatTimeForDisplay } from "@/lib/parsers/time";
 import { CustomSelect} from "@/components/ui/select";
 
 // logic flow that handles next-day scenarios

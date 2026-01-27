@@ -3,9 +3,9 @@
 import * as React from "react";
 import { Separator } from "@/components/ui/separator";
 import { FeedHeader, FeedSortBar, FeedList } from "@/components/feed";
-import { useSortedRides } from "@/lib/useSortedRides";
+import { useSortedRides } from "@/hooks/useSortedRides";
 import { EditRideDialog } from "@/components/rides";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/useToast";
 import { Ride } from "@prisma/client";
 
 interface YourRidesClientProps {

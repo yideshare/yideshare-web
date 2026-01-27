@@ -3,7 +3,7 @@ import * as React from "react";
 import { Separator } from "@/components/ui/separator";
 import { TopBar } from "@/components/navigation";
 import { FeedHeader, FeedSortBar, FeedList } from "@/components/feed";
-import { useSortedRides } from "@/lib/useSortedRides";
+import { useSortedRides } from "@/hooks/useSortedRides";
 import { FeedPageClientProps } from "@/app/interface/main";
 
 export default function FeedPageClient({

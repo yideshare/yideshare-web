@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import { bookmarkRide } from "@/lib/ride";
-import { getUserNetIdFromCookies } from "@/lib/user";
-import { extractRideIdFromPayload } from "@/lib/validate";
-import { withApiErrorHandler, ApiError } from "@/lib/withApiErrorHandler";
+import { bookmarkRide, getUserNetIdFromCookies } from "@/lib/db";
+import { withApiErrorHandler, ApiError } from "@/lib/infra";
+import { extractRideIdFromPayload } from "@/lib/auth";
 
 async function postHandler(req: Request) {
   // get netId and rideId

@@ -5,7 +5,7 @@
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 
-import { cn } from "@/lib/general";
+import { cn } from "@/lib/frontend";
 import { Button } from "@/components/ui/button";
 import {
   Popover,

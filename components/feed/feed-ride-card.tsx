@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/useToast";
 import { Bookmark } from "lucide-react";
 import { formatPhoneNumberIntl } from "react-phone-number-input";
 

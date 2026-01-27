@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import logger from "@/lib/logger";
+import { logger } from "@/lib/infra";
 
 const prisma = new PrismaClient();
 
@@ -14,7 +14,7 @@ async function main() {
       data: {
         netId: "test_netid",
         name: "Lena Qian",
-        email: "lq1234@yale.edu"
+        email: "lq1234@yale.edu",
       },
     });
   }

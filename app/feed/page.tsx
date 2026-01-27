@@ -1,6 +1,6 @@
 import FeedPageClient from "@/app/feed/feed-page-client";
-import { findBookmarkedRides, findManyRides } from "@/lib/ride";
-import { getUserNetIdFromCookies } from "@/lib/user";
+import { findBookmarkedRides, findManyRides, getUserNetIdFromCookies } from "@/lib/db";
+
 
 export default async function Feed() {
   /* ----------------  auth  ---------------- */

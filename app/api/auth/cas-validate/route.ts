@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { findOrCreateUser } from "@/lib/user";
-import { fetchYaliesData } from "@/lib/yalies";
-import { validateCASTicket, createJWT } from "@/lib/validate";
-import { withApiErrorHandler, ApiError } from "@/lib/withApiErrorHandler";
+import { findOrCreateUser } from "@/lib/db";
+import { withApiErrorHandler, ApiError } from "@/lib/infra";
+import { fetchYaliesData } from "@/lib/auth";
+import { validateCASTicket, createJWT } from "@/lib/auth";
 
 function getBaseUrl(req: Request) {
   try {
@@ -18,7 +18,7 @@ const ALLOWED_REDIRECT_PREFIXES = ["/feed", "/bookmarks", "/your-rides"];
 
 function resolveSafeRedirect(
   redirectPath: string | null,
-  baseUrl: string
+  baseUrl: string,
 ): string {
   if (!redirectPath || !redirectPath.startsWith("/")) {
     return `${baseUrl}/feed`;
@@ -43,7 +43,7 @@ async function getHandler(req: Request) {
 
   console.log(
     "CAS Validate - Received ticket:",
-    ticket ? "present" : "missing"
+    ticket ? "present" : "missing",
   );
 
   if (!ticket) {

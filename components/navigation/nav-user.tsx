@@ -24,7 +24,7 @@ import {
   // SidebarMenuButton,
   // SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { getInitials } from "@/lib/initials";
+import { getInitials } from "@/lib/frontend";
 
 export function NavUser({
   user,

@@ -1,9 +1,8 @@
 // app/results/page.tsx
 
-import { createStartEndDateTimes } from "@/lib/time";
-import { findBookmarkedRides, findFilteredRides } from "@/lib/ride";
-import { extractSearchParams } from "@/lib/search";
-import { getUserNetIdFromCookies } from "@/lib/user";
+import { createStartEndDateTimes } from "@/lib/parsers";
+import { findBookmarkedRides, findFilteredRides, getUserNetIdFromCookies } from "@/lib/db";
+import { extractSearchParams } from "@/lib/parsers";
 import FeedPageClient from "../feed/feed-page-client";
 
 type searchParamsType = {

@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { getUserNetIdFromCookies } from "@/lib/user";
-import { withApiErrorHandler, ApiError } from "@/lib/withApiErrorHandler";
+import { prisma, getUserNetIdFromCookies } from "@/lib/db";
+import { withApiErrorHandler, ApiError } from "@/lib/infra";
 
 async function deleteHandler(request: Request) {
   const url = new URL(request.url);
@@ -22,7 +21,7 @@ async function deleteHandler(request: Request) {
 
   return NextResponse.json(
     { message: "Ride deleted successfully" },
-    { status: 200 }
+    { status: 200 },
   );
 }
 
