@@ -104,9 +104,13 @@ async function getHandler(request: Request): Promise<NextResponse> {
   const hasTo = to.length > 0;
   const hasStart = startTime.length > 0;
   const hasEnd = endTime.length > 0;
-  const hasTimeWindow = hasStart && hasEnd;
   const dateObject = dateRaw ? decodeDate(dateRaw) : null;
   const hasDate = !!dateObject;
+
+  // Smart defaults for partial time input
+  const effectiveStartTime = hasStart ? startTime : "12:00 AM";
+  const effectiveEndTime = hasEnd ? endTime : "11:59 PM";
+  const hasTimeWindow = hasStart || hasEnd;
 
   const noFilters = !hasFrom && !hasTo && !hasDate && !hasTimeWindow;
   if (noFilters) {
@@ -115,7 +119,7 @@ async function getHandler(request: Request): Promise<NextResponse> {
 
   /*
    * Time filtering strategy based on two dimensions:
-   * - hasTimeWindow: user specified both start and end time
+   * - hasTimeWindow: user specified start/end time (with smart defaults)
    * - hasDate: user selected a specific date
    */
   let filterStartTime: Date | null = null;
@@ -127,8 +131,8 @@ async function getHandler(request: Request): Promise<NextResponse> {
       // Time window + date: filter by exact datetime range at DB level
       const { startTimeObject, endTimeObject } = createStartEndDateTimes(
         dateObject,
-        startTime,
-        endTime,
+        effectiveStartTime,
+        effectiveEndTime,
       );
       filterStartTime = startTimeObject;
       filterEndTime = endTimeObject;
@@ -155,7 +159,7 @@ async function getHandler(request: Request): Promise<NextResponse> {
   let rides: unknown[] = ridesData;
 
   if (needsInMemoryTimeFilter) {
-    rides = filterRidesByTimeWindow(rides, startTime, endTime);
+    rides = filterRidesByTimeWindow(rides, effectiveStartTime, effectiveEndTime);
   }
 
   return NextResponse.json(rides);
