@@ -1,8 +1,20 @@
 import { NextResponse } from "next/server";
+import { Ride } from "@prisma/client";
 import { prisma, getUserNetIdFromCookies } from "@/lib/db";
 import { withApiErrorHandler, ApiError } from "@/lib/infra";
 
-async function deleteHandler(request: Request) {
+/**
+ * Validates ride ownership by checking auth, ride existence, and ownership.
+ *
+ * @param request - The HTTP request containing rideId as query parameter
+ * @param action - The action being performed (for error messages)
+ * @returns The ride if validation passes
+ * @throws ApiError if unauthorized or ride not found
+ */
+async function validateRideOwnership(
+  request: Request,
+  action: string,
+): Promise<Ride> {
   const url = new URL(request.url);
   const rideId = url.searchParams.get("rideId");
   if (!rideId) throw new ApiError("rideId is required", 400);
@@ -14,7 +26,20 @@ async function deleteHandler(request: Request) {
   if (!ride) throw new ApiError("Ride not found", 404);
 
   if (ride.ownerNetId !== netId)
-    throw new ApiError("Unauthorized to delete this ride", 403);
+    throw new ApiError(`Unauthorized to ${action} this ride`, 403);
+
+  return ride;
+}
+
+/**
+ * Handles DELETE requests to remove a ride.
+ *
+ * @param request - The HTTP request containing rideId as query parameter
+ * @returns JSON confirmation of successful deletion
+ * @throws ApiError if unauthorized or ride not found
+ */
+async function deleteHandler(request: Request): Promise<NextResponse> {
+  const ride = await validateRideOwnership(request, "delete");
 
   await prisma.bookmark.deleteMany({ where: { rideId: ride.rideId } });
   await prisma.ride.delete({ where: { rideId: ride.rideId } });
@@ -25,20 +50,15 @@ async function deleteHandler(request: Request) {
   );
 }
 
-async function patchHandler(request: Request) {
-  const url = new URL(request.url);
-  const rideId = url.searchParams.get("rideId");
-  if (!rideId) throw new ApiError("rideId is required", 400);
-
-  const netId = await getUserNetIdFromCookies();
-  if (!netId) throw new ApiError("Unauthorized", 401);
-
-  const existingRide = await prisma.ride.findUnique({ where: { rideId } });
-  if (!existingRide) throw new ApiError("Ride not found", 404);
-
-  if (existingRide.ownerNetId !== netId)
-    throw new ApiError("Unauthorized to edit this ride", 403);
-
+/**
+ * Handles PATCH requests to update ride details.
+ *
+ * @param request - The HTTP request containing rideId as query param and updated data in body
+ * @returns JSON with the updated ride data
+ * @throws ApiError if unauthorized or ride not found
+ */
+async function patchHandler(request: Request): Promise<NextResponse> {
+  const existingRide = await validateRideOwnership(request, "edit");
   const updatedRideData = await request.json();
 
   const updatedRide = await prisma.ride.update({
