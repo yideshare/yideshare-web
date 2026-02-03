@@ -5,6 +5,7 @@ import { FeedHeader, FeedSortBar, FeedList } from "@/components/feed";
 import { useSortedRides } from "@/hooks/useSortedRides";
 import { Ride } from "@prisma/client";
 
+// bookmark component operations
 interface BookmarksClientProps {
   bookmarkedRides: Ride[];
 }
@@ -12,10 +13,13 @@ interface BookmarksClientProps {
 export default function BookmarksClient({
   bookmarkedRides,
 }: BookmarksClientProps) {
+  // sortby set to recent (just default can be changed)
   const [sortBy, setSortBy] = React.useState("recent");
+  // local bookmarked rides set to Ride array
   const [localBookmarkedRides, setLocalBookmarkedRides] =
     React.useState<Ride[]>(bookmarkedRides);
   const sortedRides = useSortedRides(localBookmarkedRides, sortBy);
+  // removes ride from bookmarked rides
   const handleUnbookmark = (rideId: string) => {
     setLocalBookmarkedRides((rides) =>
       rides.filter((r) => r.rideId !== rideId)

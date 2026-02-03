@@ -16,6 +16,7 @@ async function deleteHandler(request: Request) {
   if (ride.ownerNetId !== netId)
     throw new ApiError("Unauthorized to delete this ride", 403);
 
+  // delete bookmark from database (so it doesn't show in saved rides) when ride is deleted
   await prisma.bookmark.deleteMany({ where: { rideId: ride.rideId } });
   await prisma.ride.delete({ where: { rideId: ride.rideId } });
 

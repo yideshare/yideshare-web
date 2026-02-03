@@ -52,12 +52,14 @@ export async function bookmarkRide(netId: string, rideId: string) {
 
   // if a bookmark exists
   if (existing) {
+    // delete bookmark from database
     await prisma.bookmark.delete({
       where: { netId_rideId: { netId, rideId } },
     });
     return { bookmarked: false };
     // otherwise
   } else {
+    // no bookmark exists, so create one
     await prisma.bookmark.create({
       data: { netId, rideId },
     });
@@ -74,6 +76,7 @@ export async function findManyRides(quantity: number) {
   });
 }
 
+// find all bookmarked rides associated with a specific user
 export async function findBookmarkedRides(netId: string) {
   return prisma.bookmark.findMany({
     where: { netId },
