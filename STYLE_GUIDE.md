@@ -1714,36 +1714,36 @@ Before committing code, verify:
 
 **Code Quality:**
 
-- [ ] **Indentation**: 2 spaces, no tabs
-- [ ] **Naming**: PascalCase for components/types, camelCase for functions/variables
-- [ ] **Brackets**: Correct placement, always used
-- [ ] **Comments**: Meaningful, explain "why" not "what", use JSDoc for public functions
-- [ ] **Imports**: Organized in groups, using path aliases
-- [ ] **Quotes**: Double quotes for strings, backticks for templates
-- [ ] **Types**: TypeScript strict mode, no `any`, specify return types
-- [ ] **Error Handling**: Use try-catch, validation on inputs
-- [ ] **Async**: Return types on async functions, use await properly
-- [ ] **Components**: Logical structure, server vs client separated
-- [ ] **Props**: Interfaces defined, destructured in signature
-- [ ] **Line Length**: Under 100 characters where possible
-- [ ] **No Dead Code**: Remove unused functions, imports, files
-- [ ] **File Organization**: Logical structure, reasonable file size
+- **Indentation**: 2 spaces, no tabs
+- **Naming**: PascalCase for components/types, camelCase for functions/variables
+- **Brackets**: Correct placement, always used
+- **Comments**: Meaningful, explain "why" not "what", use JSDoc for public functions
+- **Imports**: Organized in groups, using path aliases
+- **Quotes**: Double quotes for strings, backticks for templates
+- **Types**: TypeScript strict mode, no `any`, specify return types
+- **Error Handling**: Use try-catch, validation on inputs
+- **Async**: Return types on async functions, use await properly
+- **Components**: Logical structure, server vs client separated
+- **Props**: Interfaces defined, destructured in signature
+- **Line Length**: Under 100 characters where possible
+- **No Dead Code**: Remove unused functions, imports, files
+- **File Organization**: Logical structure, reasonable file size
 
 **Before Committing:**
 
-- [ ] Commit message follows conventional commits format
-- [ ] Changes are logically grouped into a single concern
-- [ ] No debug code or commented-out code remains
+- Commit message follows conventional commits format
+- Changes are logically grouped into a single concern
+- No debug code or commented-out code remains
 
 **Before Creating a Pull Request:**
 
-- [ ] Tests are added or updated
-- [ ] Documentation is updated (if needed)
-- [ ] All CI/CD checks pass locally
-- [ ] At least one reviewer assigned
-- [ ] PR summary clearly describes the changes and why
-- [ ] Related issues are referenced
-- [ ] All conversations on previous feedback are resolved
+- Tests are added or updated
+- Documentation is updated (if needed)
+- All CI/CD checks pass locally
+- At least one reviewer assigned
+- PR summary clearly describes the changes and why
+- Related issues are referenced
+- All conversations on previous feedback are resolved
 
 ---
 
