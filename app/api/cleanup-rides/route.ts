@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db";
 import { logger, withApiErrorHandler } from "@/lib/infra"
 
 // add this to a vercel cron script when deployed
-// currently closing them (but not permanently deleting them) - trying this first and then will update
+// close rides that have past
 
 async function closeExpiredRides() {
   const now = new Date();
