@@ -1,4 +1,4 @@
-export { extractSearchParams } from "./extracSeachParams";
+export { extractSearchParams } from "./url";
 export {
   createStartEndDateTimes,
   isNextDay,
