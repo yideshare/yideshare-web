@@ -8,7 +8,6 @@ export {
   findFilteredRides,
 } from "./ride";
 export {
-  findOrCreateUser,
   getUserFromCookies,
   getUserNetIdFromCookies,
 } from "./user";
