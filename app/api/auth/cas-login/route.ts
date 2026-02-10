@@ -1,32 +1,31 @@
 import { NextResponse } from "next/server";
 
-import { CAS_URL, CAS_TEST_URL } from "@/lib/const";
-import { getYideshareUrl } from "@/lib/parsers/url";
+import { withApiErrorHandler } from "@/lib/infra";
+
+import { encodeRedirectParam } from "../_parse";
+import { getYideshareUrl, getCasUrl } from "../_url";
 
 /* 
   This API endpoint redirects users to Yale CAS login 
-  with the appropriate service URL and optional redirect parameter
+  with yideshare service URL and an optional redirect parameter.
 */
-export async function GET(req: Request): Promise<NextResponse> {
+async function handleCasLoginRedirect(req: Request): Promise<NextResponse> {
   const casUrl = getCasUrl();
   const yideshareUrl = getYideshareUrl(req);
-  const serviceParameter = `service=${encodeURIComponent(yideshareUrl)}`;
 
-  // Preserve redirect search parameters from middleware requests
-  // Destructive assingnment references searchParams property of URL class
-  const { searchParams } = new URL(req.url);
-  const redirectPath = searchParams.get("redirect") || "";
-  const redirectParameter = redirectPath
-    ? `?redirect=${encodeURIComponent(redirectPath)}`
-    : "";
+  /*
+    Preserve redirect search parameters from middleware.
+    If user not authenticated, middleware sets a redirect parameter
+    so they can return to the page they were trying to access.
+   */
+  const requestSearchParams = new URL(req.url).searchParams;
+  const redirectParam = encodeRedirectParam(requestSearchParams);
 
-  const casLoginUrl = `${casUrl}/login?` + serviceParameter + redirectParameter;
+  const casLoginUrl = `${casUrl}/login
+    ?service=${encodeURIComponent(yideshareUrl)}
+    ${redirectParam}`;
+
   return NextResponse.redirect(casLoginUrl);
 }
 
-function getCasUrl(): string {
-  return process.env.NODE_ENV === "production" ||
-    process.env.NODE_ENV === "test"
-    ? CAS_URL
-    : CAS_TEST_URL;
-}
+export const GET = withApiErrorHandler(handleCasLoginRedirect);
