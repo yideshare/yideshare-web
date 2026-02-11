@@ -20,10 +20,8 @@ async function handleCasLoginRedirect(req: Request): Promise<NextResponse> {
    */
   const requestSearchParams = new URL(req.url).searchParams;
   const redirectParam = encodeRedirectParam(requestSearchParams);
-
-  const casLoginUrl = `${casUrl}/login
-    ?service=${encodeURIComponent(yideshareUrl)}
-    ${redirectParam}`;
+  const serviceUrl = `${yideshareUrl}/api/auth/cas-validate${redirectParam}`;
+  const casLoginUrl = `${casUrl}/login?service=${encodeURIComponent(serviceUrl)}`;
 
   return NextResponse.redirect(casLoginUrl);
 }
