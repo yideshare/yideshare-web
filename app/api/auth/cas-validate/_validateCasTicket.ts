@@ -4,7 +4,7 @@ import { getCasUrl } from "../_url";
  * @internal
  * @private Only for use within /api/auth/cas-validate route.
  */
-export async function validateCASTicket(
+export async function validateCasTicket(
   ticket: string,
   serviceUrl: string
 ): Promise<string | null> {

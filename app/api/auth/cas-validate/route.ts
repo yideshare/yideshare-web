@@ -5,7 +5,7 @@ import { withApiErrorHandler, ApiError } from "@/lib/infra";
 
 import { fetchYaliesData } from "./_fetchYaliesData";
 import { resolveSafeRedirect } from "./_resolveSafeRedirect";
-import { validateCASTicket } from "./_validateCASTicket";
+import { validateCasTicket } from "./_validateCasTicket";
 import { encodeRedirectParam } from "../_parse";
 import { getYideshareUrl } from "../_url";
 import { findUserByNetId, createUser } from "./_user";
@@ -24,7 +24,7 @@ async function handleCasValidate(req: Request) {
   }
 
   // Validate using the same service url used during login
-  const netId = await validateCASTicket(ticket, serviceURL);
+  const netId = await validateCasTicket(ticket, serviceURL);
   if (!netId) {
     throw new ApiError("CAS Validate: Ticket validation failed", 400);
   }
