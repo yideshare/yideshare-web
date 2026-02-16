@@ -5,11 +5,6 @@ import { withApiErrorHandler, ApiError } from "@/lib/infra";
 
 /**
  * Validates ride ownership by checking auth, ride existence, and ownership.
- *
- * @param request - The HTTP request containing rideId as query parameter
- * @param action - The action being performed (for error messages)
- * @returns The ride if validation passes
- * @throws ApiError if unauthorized or ride not found
  */
 async function validateRideOwnership(
   request: Request,
@@ -33,10 +28,6 @@ async function validateRideOwnership(
 
 /**
  * Handles DELETE requests to remove a ride.
- *
- * @param request - The HTTP request containing rideId as query parameter
- * @returns JSON confirmation of successful deletion
- * @throws ApiError if unauthorized or ride not found
  */
 async function deleteHandler(request: Request): Promise<NextResponse> {
   const ride = await validateRideOwnership(request, "delete");
