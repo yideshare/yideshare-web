@@ -8,13 +8,8 @@ export interface FeedPageClientProps {
 
 export interface FeedRideCardProps {
   ride: Ride;
-  //occupants?: User[];
   isBookmarkedInitial: boolean;
   showDialog?: boolean;
-}
-
-export interface ResultsPageProps {
-  searchParams: searchParamsType;
 }
 
 export interface searchParamsType {
@@ -27,4 +22,10 @@ export interface searchParamsType {
 
 export interface RideWhereClauseWithArrayAND {
   AND: Prisma.RideWhereInput[];
+}
+
+export interface YaliesData {
+  first_name: string;
+  last_name: string;
+  email: string;
 }
