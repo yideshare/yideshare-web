@@ -30,6 +30,7 @@ export default function YourRidesClient({
 
   const sortedRides = useSortedRides(localRides, sortBy);
 
+  // delete ride and show toast notification
   const handleDeleteRide = async (rideId: string) => {
     try {
       const res = await fetch(`${API_BASE}/api/rides/update?rideId=${rideId}`, {
@@ -59,6 +60,7 @@ export default function YourRidesClient({
     }
   };
 
+  // edit ride and show toast notification
   const handleEditRide = async (updatedRide: Partial<Ride>) => {
     if (!editingRide) return;
 

@@ -4,6 +4,7 @@ import { Ride } from "@prisma/client";
 export function useSortedRides(rides: Ride[], sortBy: string) {
   const [sortedRides, setSortedRides] = useState<Ride[]>([]);
 
+  // sort by recent, oldest (by date), or alphabetical (by leaving from)
   useEffect(() => {
     const sorted = [...rides];
     switch (sortBy) {

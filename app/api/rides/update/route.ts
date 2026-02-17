@@ -32,6 +32,7 @@ async function validateRideOwnership(
 async function deleteHandler(request: Request): Promise<NextResponse> {
   const ride = await validateRideOwnership(request, "delete");
 
+  // delete bookmark from database (so it doesn't show in saved rides) when ride is deleted
   await prisma.bookmark.deleteMany({ where: { rideId: ride.rideId } });
   await prisma.ride.delete({ where: { rideId: ride.rideId } });
 
