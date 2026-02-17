@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { logger, withApiErrorHandler } from "@/lib/infra"
+import { withApiErrorHandler } from "@/lib/infra"
 import { closeExpiredRides } from "@/lib/db/cleanExpiredRides";
 
 async function handler(request: Request) {
@@ -9,7 +9,7 @@ async function handler(request: Request) {
   const cronSecret = process.env.CRON_SECRET;
 
   if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
-    logger.warn("CRON: Unauthorized access attempt");
+    console.error("CRON: Unauthorized access attempt");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
