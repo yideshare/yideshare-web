@@ -50,12 +50,6 @@ async function testLoginHandler(req: Request) {
 
 export const GET = withApiErrorHandler(testLoginHandler);
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 async function createTestUser() {
   await prisma.user.upsert({
     where: { netId: "testuser" },
