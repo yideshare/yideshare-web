@@ -12,10 +12,6 @@ const TIME_ZONE = "America/New_York";
 /**
  * Handles GET requests to search for filtered rides.
  * Filters rides based on location, date, and time window criteria.
- *
- * @param request - The HTTP request containing search parameters
- * @returns JSON array of matched rides based on search criteria
- * @throws ApiError if no search filters are provided
  */
 async function getHandler(request: Request): Promise<NextResponse> {
   const url = new URL(request.url);
@@ -93,10 +89,6 @@ async function getHandler(request: Request): Promise<NextResponse> {
 
 export const GET = withApiErrorHandler(getHandler);
 
-// ──────────────────────────────────────────────
-// Helper functions
-// ──────────────────────────────────────────────
-
 /**
  * Converts a date to minutes since midnight in the specified timezone.
  */
@@ -125,16 +117,16 @@ function splitInterval(start: number, end: number): Array<[number, number]> {
   ];
 }
 
-/**
- * Checks if two interval arrays overlap.
- */
 function intervalsOverlap(
-  a: Array<[number, number]>,
-  b: Array<[number, number]>,
+  intervalA: Array<[number, number]>,
+  intervalB: Array<[number, number]>,
 ): boolean {
-  return a.some(([as, ae]) =>
-    b.some(([bs, be]) => Math.min(ae, be) > Math.max(as, bs)),
-  );
+  // The `.some()` method checks each pair of elements in an array
+  return intervalA.some(([aStart, aEnd]) => {
+    return intervalB.some(([bStart, bEnd]) => {
+      return Math.min(aEnd, bEnd) > Math.max(aStart, bStart);
+  });
+});
 }
 
 /**

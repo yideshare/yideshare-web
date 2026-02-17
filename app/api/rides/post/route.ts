@@ -7,10 +7,6 @@ import { ApiError, withApiErrorHandler } from "@/lib/infra";
 /**
  * Handles POST requests to create a new ride.
  * Validates user authentication and ride data before creation.
- *
- * @param request - The HTTP request containing ride data
- * @returns JSON response with created ride data
- * @throws ApiError if user is not authenticated or ride creation fails
  */
 async function postHandler(request: Request): Promise<NextResponse> {
   const netId = await getUserNetIdFromCookies();
