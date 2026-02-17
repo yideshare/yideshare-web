@@ -1,6 +1,9 @@
 // yideshare/app/your-rides/page.tsx
+
 import { redirect } from "next/navigation";
+
 import { prisma, findBookmarkedRides, getUserNetIdFromCookies } from "@/lib/db";
+
 import YourRidesClient from "./your-rides-client";
 
 export default async function DashboardPage() {
@@ -11,7 +14,7 @@ export default async function DashboardPage() {
     redirect(`/api/auth/cas-login?next=${encodeURIComponent("/your-rides")}`);
   }
 
-  // Fetch owned rides matching the user that are open
+  // Fetch all owned rides
   const ownedRides = await prisma.ride.findMany({
     where: { ownerNetId: netId, isClosed: false },
     orderBy: { startTime: "desc" },
@@ -24,7 +27,7 @@ export default async function DashboardPage() {
   return (
     <YourRidesClient
       ownedRides={ownedRides}
-      // note: though these are passed in they are not shown in the your rides page (hidebookmark set to false in the client)
+      // Note: though these are passed in they are not shown in the your rides page (hidebookmark set to false in the client)
       bookmarkedRideIds={bookmarkedRideIds}
     />
   );
