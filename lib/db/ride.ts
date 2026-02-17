@@ -76,7 +76,7 @@ export async function findManyRides(quantity: number) {
   });
 }
 
-// find all bookmarked rides associated with a specific user
+// find all bookmarked rides associated with a user
 export async function findBookmarkedRides(netId: string) {
   return prisma.bookmark.findMany({
     where: { netId },
