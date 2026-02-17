@@ -1,6 +1,6 @@
 /**
-  YaliesData is declared as only having 3 fields: first name, last name, and email.
-  Yalies response includes more fields, but they are ignored (but still exist at runtime)
+ * YaliesData is declared as only having 3 fields: first name, last name, and email.
+ * Yalies response includes more fields, but they are ignored (but still exist at runtime)
  */
 import { YaliesData } from "@/app/interface/main";
 
