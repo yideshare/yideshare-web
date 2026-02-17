@@ -1,13 +1,62 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { ApiError } from "@/lib/infra";
-import { createJWT } from "@/lib/auth";
 
-async function testLoginHandler() {
-  const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
+import { prisma } from "@/lib/db";
+import { createJWT } from "@/lib/auth";
+import { ApiError, withApiErrorHandler } from "@/lib/infra";
+
+import { getYideshareUrl } from "../_url";
+
+/**
+ * For testing purposes only, forbidden in production!
+ * 
+ * Handles GET test login requests.
+ * Creates (or upserts) a test user in the database.
+ * Sets an auth cookie for that user, 
+ * and redirects to `yideshareURL`/feed.
+ */
+async function testLoginHandler(req: Request) {
+  
+  // Forbidden in production
   if (process.env.NODE_ENV === "production") {
     throw new ApiError("Not allowed", 403);
   }
+
+  const yideshareUrl = getYideshareUrl(req);
+  const response = NextResponse.redirect(`${yideshareUrl}/feed`);
+
+  createTestUser();
+
+  const jwtSigned = await createJWT(
+    "Test",
+    "User",
+    "test.user@yale.edu",
+    "testuser"
+  );
+  // Set authentication cookie
+  response.cookies.set("auth", jwtSigned, {
+    httpOnly: true,
+    path: "/",
+    secure: yideshareUrl.startsWith("https"),
+    sameSite: "lax",
+    /**
+     * Make sure cookies and token expire at the same time for consistency;
+     * maxAge set to 3600s = 1h to match the fallback JWT_EXPIRES_IN value
+     */
+    maxAge: 3600,
+  });
+
+  return response;
+}
+
+export const GET = withApiErrorHandler(testLoginHandler);
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+async function createTestUser() {
   await prisma.user.upsert({
     where: { netId: "testuser" },
     update: {},
@@ -17,37 +66,4 @@ async function testLoginHandler() {
       email: "test.user@yale.edu",
     },
   });
-
-  const response = NextResponse.redirect(`${baseUrl}/feed`);
-
-  // set auth cookie
-  const jwt_signed = await createJWT(
-    "Test",
-    "User",
-    "test.user@yale.edu",
-    "testuser",
-  );
-
-  response.cookies.set("auth", jwt_signed, {
-    httpOnly: true,
-    path: "/",
-    secure: baseUrl.startsWith("https"),
-    sameSite: "lax",
-    // for the LOVE OF GOD PLEASE make sure this matches the expiry of the token
-    // cookies and token go bad at the same time --> life easy :)
-    // set for 1h to match the fallback JWT_EXPIRES_IN value
-    maxAge: 60 * 60,
-  });
-
-  return response;
 }
-
-export async function GET() {
-  return testLoginHandler();
-}
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
