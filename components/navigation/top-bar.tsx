@@ -95,7 +95,7 @@ export function TopBar({ onResults, rides }: TopBarProps) {
     const hasDate = date !== null;
     const hasStart = startTime.trim().length > 0;
     const hasEnd = endTime.trim().length > 0;
-    const hasTimeWindow = hasStart && hasEnd;
+    const hasTimeWindow = hasStart || hasEnd;
 
     if (!(hasFrom || hasTo || hasDate || hasTimeWindow)) {
       toast({
@@ -112,10 +112,8 @@ export function TopBar({ onResults, rides }: TopBarProps) {
     if (hasFrom) params.set("from", from);
     if (hasTo) params.set("to", to);
     if (hasDate && date) params.set("date", encodeDate(date));
-    if (hasTimeWindow) {
-      params.set("startTime", startTime);
-      params.set("endTime", endTime);
-    }
+    if (hasStart) params.set("startTime", startTime);
+    if (hasEnd) params.set("endTime", endTime);
 
     const qs = params.toString();
 

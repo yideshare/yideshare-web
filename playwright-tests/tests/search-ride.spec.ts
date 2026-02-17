@@ -77,6 +77,62 @@ test("Search Ride - time only equal start=end treated as point-in-time", async (
   await expect(page.getByText("Test User")).toBeVisible();
 });
 
+test("Search Ride - time window without date (across all dates)", async ({
+  page,
+}) => {
+  const rideFunctions = new RideFunctions(page);
+  await rideFunctions.createValidRideViaPopup();
+
+  // Only set time window, no date or location
+  await page.getByRole("combobox").filter({ hasText: "Select time" }).click();
+  await page
+    .getByRole("combobox", { name: "Select earliest departure time" })
+    .click();
+  await page.getByRole("option", { name: "12:00 AM" }).click();
+
+  await page
+    .getByRole("combobox", { name: "Select latest departure time" })
+    .click();
+  await page.getByRole("option", { name: "01:00 AM" }).click();
+
+  await page.getByRole("button", { name: "Search" }).click();
+  await expect(page.getByText("Test User")).toBeVisible();
+});
+
+test("Search Ride - only start time (end defaults to 11:59 PM)", async ({
+  page,
+}) => {
+  const rideFunctions = new RideFunctions(page);
+  await rideFunctions.createValidRideViaPopup();
+
+  // Only set start time, end time should default to 11:59 PM
+  await page.getByRole("combobox").filter({ hasText: "Select time" }).click();
+  await page
+    .getByRole("combobox", { name: "Select earliest departure time" })
+    .click();
+  await page.getByRole("option", { name: "12:00 AM" }).click();
+
+  await page.getByRole("button", { name: "Search" }).click();
+  await expect(page.getByText("Test User")).toBeVisible();
+});
+
+test("Search Ride - only end time (start defaults to 12:00 AM)", async ({
+  page,
+}) => {
+  const rideFunctions = new RideFunctions(page);
+  await rideFunctions.createValidRideViaPopup();
+
+  // Only set end time, start time should default to 12:00 AM
+  await page.getByRole("combobox").filter({ hasText: "Select time" }).click();
+  await page
+    .getByRole("combobox", { name: "Select latest departure time" })
+    .click();
+  await page.getByRole("option", { name: "01:00 AM" }).click();
+
+  await page.getByRole("button", { name: "Search" }).click();
+  await expect(page.getByText("Test User")).toBeVisible();
+});
+
 async function helper(page: any, startTime: string, endTime: string) {
   const rideFunctions = new RideFunctions(page);
   await rideFunctions.createValidRideViaPopup();
