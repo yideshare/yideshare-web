@@ -1,4 +1,4 @@
-import { PrismaClient } from "./generated/prisma/client";
+import { PrismaClient } from "@/prisma/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { logger } from "@/lib/infra";
 
@@ -7,7 +7,7 @@ const adapter = new PrismaPg({
 });
 const prisma = new PrismaClient({ adapter });
 
-async function main() {
+async function main(): Promise<void> {
   // Ensure user exists (create only if not found)
   let user = await prisma.user.findUnique({
     where: { netId: "test_netid" },
