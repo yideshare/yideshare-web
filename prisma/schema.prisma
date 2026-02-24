@@ -18,7 +18,7 @@ model User {
   // one-to-many relationship with Rides
   ridesOwned Ride[]
 
-  // [UNUSED] many-to-many: users participating in rides 
+  // [UNUSED] many-to-many relationship with Rides
   ridesParticipated RideParticipant[]
 
   // many-to-many relationship for bookmarks
@@ -48,17 +48,17 @@ model Ride {
   isClosed          Boolean 
   hasCar            Boolean 
 
-  // many-to-one: ride owner (used for authorization checks on update/delete)
+  // many-to-one: many-to-one relationship with User
   ownerNetId String
   owner      User   @relation(fields: [ownerNetId], references: [netId])
 
-  // [UNUSED] many-to-many relationship with Rides
+  // [UNUSED] many-to-many relationship with Users for ride participation
   participants RideParticipant[]
 
   // [UNUSED] ride request feature not implemented
   requests RideRequest[] @relation("RideRequests")
 
-  // many-to-many: many-to-many relationship for bookmarks
+  // many-to-many: many-to-many relationship with Users for bookmarks
   bookmarks Bookmark[]
 }
 
@@ -74,7 +74,7 @@ model Bookmark {
   @@unique([netId, rideId])
 }
 
-// [UNUSED] placeholder for ride participant tracking
+// [UNUSED] junction table for many-to-many User-Ride relationship for ride request
 model RideParticipant {
   netId  String
   rideId String
@@ -85,7 +85,7 @@ model RideParticipant {
   @@id([netId, rideId])
 }
 
-// [UNUSED] junction table for many-to-many User-Ride relationship for ride request
+// [UNUSED] placeholder for ride request feature 
 model RideRequest {
   requestId     String   @id @default(cuid())
   rideId        String
