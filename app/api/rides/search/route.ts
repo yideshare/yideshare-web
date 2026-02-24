@@ -77,9 +77,12 @@ async function getHandler(request: Request): Promise<NextResponse> {
     // No time window + no date: no time filtering, only location filter
   }
 
+  // Stage 1: DB-level coarse filter (location + datetime range if date provided)
   const ridesData = await findFilteredRides(from, to, filterStartTime, filterEndTime);
   let rides: unknown[] = ridesData;
 
+  // Stage 2: in-memory time-of-day filter, only when time window is given without a date
+  // (SQL can't easily express "between 2PM and 4PM across all dates")
   if (needsInMemoryTimeFilter) {
     rides = filterRidesByTimeWindow(rides, effectiveStartTime, effectiveEndTime);
   }

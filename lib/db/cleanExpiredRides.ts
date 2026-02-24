@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/db";
 
-export async function closeExpiredRides() {
+export async function closeExpiredRides(): Promise<{ ridesClosed: number }> {
   const now = new Date();
 
   // Close expired rides
