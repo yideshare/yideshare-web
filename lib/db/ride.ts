@@ -3,12 +3,11 @@ import { logger } from "@/lib/infra"
 import { Ride } from "@prisma/client";
 import { RideWhereClauseWithArrayAND } from "@/app/interface/main";
 
-export async function createRide(ride: Ride, user: {netId: string; name: string; email: string }) {
+export async function createRide(ride: Ride, user: {netId: string; name: string; email: string }): Promise<Ride> {
   try {
     const newRide = await prisma.ride.create({
       data: {
         ownerNetId: user.netId,
-        // ownerName: ride.ownerName || "",
         ownerName: user.name,
         ownerEmail: user.email,
         ownerPhone: ride.ownerPhone || "",
@@ -31,7 +30,7 @@ export async function createRide(ride: Ride, user: {netId: string; name: string;
   }
 }
 
-export async function closeRide(rideId: string) {
+export async function closeRide(rideId: string): Promise<Ride | null> {
   try {
     const updatedRide = await prisma.ride.update({
       where: { rideId },
@@ -44,7 +43,7 @@ export async function closeRide(rideId: string) {
   }
 }
 
-export async function bookmarkRide(netId: string, rideId: string) {
+export async function bookmarkRide(netId: string, rideId: string): Promise<{ bookmarked: boolean }> {
   // try to find bookmark
   const existing = await prisma.bookmark.findUnique({
     where: { netId_rideId: { netId, rideId } },
@@ -67,7 +66,7 @@ export async function bookmarkRide(netId: string, rideId: string) {
   }
 }
 
-export async function findManyRides(quantity: number) {
+export async function findManyRides(quantity: number): Promise<Ride[]> {
   return prisma.ride.findMany({
     take: quantity,
     where: {
@@ -77,19 +76,20 @@ export async function findManyRides(quantity: number) {
 }
 
 // find all bookmarked rides associated with a user
-export async function findBookmarkedRides(netId: string) {
+export async function findBookmarkedRides(netId: string): Promise<{ ride: Ride }[]> {
   return prisma.bookmark.findMany({
     where: { netId },
     select: { ride: true },
   });
 }
 
+// Coarse DB-level filter by location and datetime range.
 export async function findFilteredRides(
   from: string,
   to: string,
   filterStartTime?: Date | null,
   filterEndTime?: Date | null,
-) {
+): Promise<Ride[]> {
   // Build the where clause dynamically based on non-empty criteria
   const whereClause: RideWhereClauseWithArrayAND = {
     AND: [{ isClosed: false }],

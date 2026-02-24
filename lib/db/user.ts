@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/infra";
+import { User } from "@prisma/client";
 import { cookies } from "next/headers";
-import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { jwtVerify } from "jose";
 
 export async function findOrCreateUser(
@@ -9,7 +9,7 @@ export async function findOrCreateUser(
   firstName: string,
   lastName: string,
   email: string,
-) {
+): Promise<User> {
   // try to find user
   let user = await prisma.user.findUnique({ where: { netId } });
 
@@ -26,10 +26,13 @@ export async function findOrCreateUser(
   return user;
 }
 
-export async function getUserFromCookies(cookieStore: ReadonlyRequestCookies) {
+export async function getUserFromCookies(): Promise<{
+  user?: { netId: string; name: string; email: string };
+  error?: string;
+  status?: number;
+}> {
   // retrieve cookies
-  // 11/06 by Tracy: update due to Cookies are JWT instead of JSON
-  // const userCookie = cookieStore.get("user");
+  const cookieStore = await cookies();
   const userCookie = cookieStore.get("auth");
   
   // if no user cookie
@@ -58,23 +61,4 @@ export async function getUserFromCookies(cookieStore: ReadonlyRequestCookies) {
     return { error: "Invalid Cookie/ JWT token", status: 401 };
   }
 
-}
-
-// chat helped here, check
-export async function getUserNetIdFromCookies() {
-  // retrieve cookies
-  const cookieStore = await cookies();
-  // parse value
-  const token = cookieStore.get("auth")?.value;
-  if (!token) return null;
-
-  try {
-    const { payload } = await jwtVerify(
-      token,
-      new TextEncoder().encode(process.env.JWT_SECRET!),
-    );
-    return (payload as any).netId ?? null;
-  } catch {
-    return null;
-  }
 }

@@ -1,7 +1,8 @@
 // app/results/page.tsx
 
+import { Ride } from "@prisma/client";
 import { createStartEndDateTimes } from "@/lib/parsers";
-import { findBookmarkedRides, findFilteredRides, getUserNetIdFromCookies } from "@/lib/db";
+import { findBookmarkedRides, findFilteredRides, getUserFromCookies } from "@/lib/db";
 import { extractSearchParams } from "@/lib/parsers";
 import FeedPageClient from "../feed/feed-page-client";
 
@@ -17,7 +18,8 @@ type searchParamsType = {
 export default async function Results({ searchParams }: { searchParams: Promise<searchParamsType> }) {
   const resolvedSearchParams = await searchParams;
   // get user cookies
-  const netId = await getUserNetIdFromCookies();
+  const { user } = await getUserFromCookies();
+  const netId = user?.netId ?? null;
 
   // if no user cookies were found
   if (netId === null) {
@@ -50,7 +52,7 @@ export default async function Results({ searchParams }: { searchParams: Promise<
   
   // fetch bookmarked rides
   const bookmarks = await findBookmarkedRides(netId);
-  const bookmarkedRideIds = bookmarks.map((b) => b.ride.rideId);
+  const bookmarkedRideIds = bookmarks.map((b: { ride: Ride }) => b.ride.rideId);
 
   return (
     <FeedPageClient 

@@ -10,5 +10,4 @@ export {
 export {
   findOrCreateUser,
   getUserFromCookies,
-  getUserNetIdFromCookies,
 } from "./user";

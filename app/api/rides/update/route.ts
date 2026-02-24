@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { Ride } from "@prisma/client";
-import { prisma, getUserNetIdFromCookies } from "@/lib/db";
+import { prisma, getUserFromCookies } from "@/lib/db";
 import { withApiErrorHandler, ApiError } from "@/lib/infra";
 
 /**
@@ -14,7 +14,8 @@ async function validateRideOwnership(
   const rideId = url.searchParams.get("rideId");
   if (!rideId) throw new ApiError("rideId is required", 400);
 
-  const netId = await getUserNetIdFromCookies();
+  const { user } = await getUserFromCookies();
+  const netId = user?.netId ?? null;
   if (!netId) throw new ApiError("Unauthorized", 401);
 
   const ride = await prisma.ride.findUnique({ where: { rideId } });

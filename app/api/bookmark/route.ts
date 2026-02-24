@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
-import { bookmarkRide, getUserNetIdFromCookies } from "@/lib/db";
+import { bookmarkRide, getUserFromCookies } from "@/lib/db";
 import { withApiErrorHandler, ApiError } from "@/lib/infra";
 import { extractRideIdFromPayload } from "@/lib/auth";
 
 async function postHandler(req: Request) {
   // get netId and rideId
-  const netId = await getUserNetIdFromCookies();
+  const { user } = await getUserFromCookies();
+  const netId = user?.netId ?? null;
   const rideId = await extractRideIdFromPayload(req);
 
   // validate netId

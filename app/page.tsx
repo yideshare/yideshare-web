@@ -6,6 +6,15 @@ import * as React from "react";
 import Link from "next/link";
 import { PiTaxi, PiHandshake, PiIdentificationCard } from "react-icons/pi";
 
+function handleLogin() {
+  const params = new URLSearchParams(window.location.search);
+  const redirectParam = params.get("redirect");
+  const target = redirectParam
+    ? `/api/auth/cas-login?redirect=${encodeURIComponent(redirectParam)}`
+    : "/api/auth/cas-login";
+  window.location.href = target;
+}
+
 export default function Home() {
   return (
     <main className="relative min-h-screen bg-white flex flex-col">
@@ -50,14 +59,7 @@ export default function Home() {
           {/* ---- LOGIN BUTTON ---- */}
           <div className="px-4 sm:px-6 pb-12 sm:pb-16 flex justify-center">
             <button
-              onClick={() => {
-                const params = new URLSearchParams(window.location.search);
-                const r = params.get("redirect");
-                const target = r
-                  ? `/api/auth/cas-login?redirect=${encodeURIComponent(r)}`
-                  : "/api/auth/cas-login";
-                window.location.href = target;
-              }}
+              onClick={handleLogin}
               aria-label="Login"
               className="inline-flex items-center gap-2 rounded-full bg-primary/90 px-5 py-3 text-sm sm:text-base font-semibold text-white shadow hover:bg-primary"
             >
