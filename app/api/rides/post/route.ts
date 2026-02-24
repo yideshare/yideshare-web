@@ -1,7 +1,6 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { createRide, getUserFromCookies, getUserNetIdFromCookies } from "@/lib/db";
+import { createRide, getUserFromCookies } from "@/lib/db";
 import { ApiError, withApiErrorHandler } from "@/lib/infra";
 
 /**
@@ -9,16 +8,10 @@ import { ApiError, withApiErrorHandler } from "@/lib/infra";
  * Validates user authentication and ride data before creation.
  */
 async function postHandler(request: Request): Promise<NextResponse> {
-  const netId = await getUserNetIdFromCookies();
-  const cookieStore = await cookies();
-  const { user } = await getUserFromCookies(cookieStore);
-
-  if (netId === null) {
-    throw new ApiError("Cannot get user netId from cookies", 401);
-  }
+  const { user } = await getUserFromCookies();
 
   if (!user) {
-    throw new ApiError("User not found", 401);
+    throw new ApiError("User not found or not authenticated", 401);
   }
 
   const ride = await request.json();
