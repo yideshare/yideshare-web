@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/infra"
-import { Ride } from "@prisma/client";
+import { Ride } from "@/prisma/generated/prisma/client";
 import { RideWhereClauseWithArrayAND } from "@/app/interface/main";
 
 export async function createRide(ride: Ride, user: {netId: string; name: string; email: string }) {
@@ -18,7 +18,7 @@ export async function createRide(ride: Ride, user: {netId: string; name: string;
         startTime: new Date(ride.startTime),
         endTime: new Date(ride.endTime),
         totalSeats: ride.totalSeats || 4,
-        currentTakenSeats: 0,
+        currentTakenSeats: 1, // Assuming the creator takes one seat by default
         isClosed: false,
         hasCar: ride.hasCar ?? false,
       },

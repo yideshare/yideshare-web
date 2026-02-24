@@ -6,7 +6,7 @@ import { FeedHeader, FeedSortBar, FeedList } from "@/components/feed";
 import { useSortedRides } from "@/hooks/useSortedRides";
 import { EditRideDialog } from "@/components/rides";
 import { useToast } from "@/hooks/useToast";
-import { Ride } from "@prisma/client";
+import { Ride } from "@/prisma/generated/prisma/client";
 
 interface YourRidesClientProps {
   ownedRides: Ride[];

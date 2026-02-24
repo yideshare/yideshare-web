@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { TimeSelect } from "@/components/ui/time-select";
-import { Ride } from "@prisma/client";
+import { Ride } from "@/prisma/generated/prisma/client";
 import { useState } from "react";
 import { CustomPhoneInput } from "@/components/ui/phone-input";
 import { createStartEndDateTimes, formatTimeForDisplay } from "@/lib/parsers/time";

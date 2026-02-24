@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Ride } from "@prisma/client";
+import { Ride } from "@/prisma/generated/prisma/client";
 
 export function useSortedRides(rides: Ride[], sortBy: string) {
   const [sortedRides, setSortedRides] = useState<Ride[]>([]);
