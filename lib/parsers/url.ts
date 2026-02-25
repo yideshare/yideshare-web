@@ -1,7 +1,9 @@
 import { searchParamsType } from "@/app/interface/main";
 import { decodeDate } from "@/lib/parsers";
 
-export function extractSearchParams(searchParams: searchParamsType) {
+// custom type here because nextjs passes params as a plain object
+// results page should be refactored, find a fix for this
+export function decodeSearchParams(searchParams: searchParamsType) {
   const from = decodeURIComponent(searchParams.from);
   const to = decodeURIComponent(searchParams.to);
   const date = decodeDate(searchParams.date);

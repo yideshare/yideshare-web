@@ -2,7 +2,7 @@
 
 import { createStartEndDateTimes } from "@/lib/parsers";
 import { findBookmarkedRides, findFilteredRides, getUserNetIdFromCookies } from "@/lib/db";
-import { extractSearchParams } from "@/lib/parsers";
+import { decodeSearchParams } from "@/lib/parsers";
 import FeedPageClient from "../feed/feed-page-client";
 
 type searchParamsType = {
@@ -31,7 +31,7 @@ export default async function Results({ searchParams }: { searchParams: Promise<
     date,
     startTime: startTimeString,
     endTime: endTimeString,
-  } = extractSearchParams(resolvedSearchParams);
+  } = decodeSearchParams(resolvedSearchParams);
 
   // create start and end time objects
   const { startTimeObject, endTimeObject } = createStartEndDateTimes(
