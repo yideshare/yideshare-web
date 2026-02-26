@@ -3,7 +3,7 @@ import * as React from "react";
 import { Separator } from "@/components/ui/separator";
 import { FeedHeader, FeedSortBar, FeedList } from "@/components/feed";
 import { useSortedRides } from "@/hooks/useSortedRides";
-import { Ride } from "@prisma/client";
+import { Ride } from "@/prisma/generated/prisma/client";
 
 // bookmark component operations
 interface BookmarksClientProps {

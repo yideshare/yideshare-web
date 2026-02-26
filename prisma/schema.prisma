@@ -1,67 +1,72 @@
 generator client {
-  provider = "prisma-client-js"
+  // provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "./generated/prisma"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
 }
 
 model User {
-  netId      String  @id
-  name       String
-  email      String
-  avatar     Bytes?
-  avatarType String?
+  netId      String  @id // Yale net ID
+  name       String 
+  email      String 
+  avatar     Bytes? // profile image displayed in nav-user component 
+  avatarType String? // [UNUSED] 
 
   // one-to-many relationship with Rides
   ridesOwned Ride[]
 
-  // many-to-many relationship with Rides
+  // [UNUSED] many-to-many relationship with Rides
   ridesParticipated RideParticipant[]
 
-  // relationship for bookmarks
+  // many-to-many relationship for bookmarks
   bookmarks Bookmark[]
 
+  // [UNUSED] messaging feature 
   sentMessages     Message[]     @relation("MessageSender")
   receivedMessages Message[]     @relation("MessageReceiver")
+
+  // [UNUSED] ride request 
   sentRequests     RideRequest[] @relation("RequestSender")
   receivedRequests RideRequest[] @relation("RequestReceiver")
 }
 
 model Ride {
-  rideId            String   @id @default(cuid())
-  ownerName         String
-  ownerEmail        String
-  ownerPhone        String?
-  beginning         String
-  destination       String
-  description       String
-  startTime         DateTime
-  endTime           DateTime
-  totalSeats        Int
-  currentTakenSeats Int
-  isClosed          Boolean
-  hasCar            Boolean
+  rideId            String   @id @default(cuid()) 
+  ownerName         String 
+  ownerEmail        String 
+  ownerPhone        String? 
+  beginning         String 
+  destination       String 
+  description       String 
+  startTime         DateTime 
+  endTime           DateTime 
+  totalSeats        Int 
+  currentTakenSeats Int // [UNUSED] set to 0 on creation but then??? 
+  isClosed          Boolean 
+  hasCar            Boolean 
 
-  // many-to-one relationship with User
+  // many-to-one: many-to-one relationship with User
   ownerNetId String
   owner      User   @relation(fields: [ownerNetId], references: [netId])
 
-  // many-to-many relationship with Users
+  // [UNUSED] many-to-many relationship with Users for ride participation
   participants RideParticipant[]
-  requests     RideRequest[]     @relation("RideRequests")
 
-  // many-to-many relationship with Users
+  // [UNUSED] ride request feature not implemented
+  requests RideRequest[] @relation("RideRequests")
+
+  // many-to-many: many-to-many relationship with Users for bookmarks
   bookmarks Bookmark[]
 }
 
 // junction table for many-to-many User-Ride relationship for bookmarks
 model Bookmark {
-  bookmarkId String @id @default(cuid())
-  netId      String
-  rideId     String
+  bookmarkId String @id @default(cuid()) 
+  netId      String 
+  rideId     String 
 
   user User @relation(fields: [netId], references: [netId])
   ride Ride @relation(fields: [rideId], references: [rideId])
@@ -69,7 +74,7 @@ model Bookmark {
   @@unique([netId, rideId])
 }
 
-// junction table for many-to-many User-Ride relationship for ride request
+// [UNUSED] junction table for many-to-many User-Ride relationship for ride request
 model RideParticipant {
   netId  String
   rideId String
@@ -80,13 +85,14 @@ model RideParticipant {
   @@id([netId, rideId])
 }
 
+// [UNUSED] placeholder for ride request feature 
 model RideRequest {
   requestId     String   @id @default(cuid())
   rideId        String
   senderNetId   String
   receiverNetId String
   timestamp     DateTime @default(now())
-  payload       String
+  payload       String 
   isAccepted    Boolean  @default(false)
 
   ride     Ride @relation("RideRequests", fields: [rideId], references: [rideId])
@@ -94,6 +100,7 @@ model RideRequest {
   receiver User @relation("RequestReceiver", fields: [receiverNetId], references: [netId])
 }
 
+// [UNUSED] placeholder for messaging feature
 model Message {
   messageId     String   @id @default(cuid())
   senderNetId   String
