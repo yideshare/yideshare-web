@@ -9,9 +9,11 @@ export async function validateCasTicket(
   serviceUrl: string
 ): Promise<string | null> {
   const casUrl = getCasUrl();
-  const validateUrl = `${casUrl}/serviceValidate
-    ?ticket=${encodeURIComponent(ticket)}
-    &service=${encodeURIComponent(serviceUrl)}`;
+  const ticketParam = `?ticket=${encodeURIComponent(ticket)}`;
+  const serviceParam = `&service=${encodeURIComponent(serviceUrl)}`;
+  const validateUrl = `${casUrl}/serviceValidate${ticketParam}${serviceParam}`;
+
+  console.log(validateUrl);
 
   // CAS tickets are single use, never chace the response
   const res = await fetch(validateUrl, { cache: "no-store" });
