@@ -1,4 +1,4 @@
-const CAS_URL = "https://secure-tst.its.yale.edu/cas";
+const CAS_URL = "https://secure.its.yale.edu/cas";
 const CAS_TEST_URL = "https://secure-tst.its.yale.edu/cas";
 
 /**
@@ -21,7 +21,6 @@ export function getYideshareUrl(req: Request): string {
     return new URL(req.url).origin;
   } catch {
     if (process.env.NEXTAUTH_URL) return `https://${process.env.NEXTAUTH_URL}`;
-    if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
     return "http://localhost:3000";
   }
 }
