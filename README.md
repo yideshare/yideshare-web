@@ -17,7 +17,6 @@ Ensure your `.env` file includes the following variables for local dev:
 - `POSTGRES_PASSWORD=<come up with your password`
 - `DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?schema=public`
 - `DIRECT_URL=postgresql://postgres:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?schema=public`
-- `CAS_BASE_URL="https://secure-tst.its.yale.edu/cas"`
 - `YALIES_API_KEY=<ask admin team>`
 
 Build and start the Docker container:
@@ -26,7 +25,13 @@ Build and start the Docker container:
 docker compose up -d
 ```
 
-Sync with latest db changes or create if no db:
+Generate prisma client for types:
+
+```bash
+npx prisma generate
+```
+
+Sync the db with changes in schema file or create if no db:
 
 ```bash
 npx prisma db push
