@@ -27,7 +27,7 @@ import { LocationCombobox } from "@/components/search";
 import { ShareYideDialog } from "@/components/rides";
 import { DateTime } from "luxon";
 
-import { Ride } from "@prisma/client";
+import { Ride } from "@/prisma/generated/prisma/client";
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "";
 
 /* -------------------------------------------------------------------------- */
