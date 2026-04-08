@@ -33,6 +33,8 @@ export function FeedRideCard({
   const { toast } = useToast();
   const [isBookmarked, setIsBookmarked] = React.useState(isBookmarkedInitial);
 
+  const isPast = new Date(ride.endTime) < new Date();
+
   /* ------------ helpers ------------ */
   const ownerName = ride.ownerName ?? "Driver";
   const ownerEmail = ride.ownerEmail ?? "No email provided";
@@ -72,80 +74,84 @@ export function FeedRideCard({
 
   /* ------------ UI ------------ */
   const cardContent = (
-    <Card className="rounded-2xl border border-border bg-white px-3 sm:px-6 py-3 sm:py-4 shadow-card hover:shadow-cardHover cursor-pointer">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-1">
-        <div>
-          <p className="text-sm sm:text-lg font-medium text-black mb-1">
-            Leaving from
-          </p>
-          <p className="text-lg sm:text-2xl font-semibold text-black break-words">
-            {ride.beginning}
-          </p>
-        </div>
-
-        <div>
-          <p className="text-sm sm:text-lg font-medium text-black mb-1">
-            Going to
-          </p>
-          <p className="text-lg sm:text-2xl font-semibold text-black break-words">
-            {ride.destination}
-          </p>
-        </div>
-
-        <div>
-          <p className="text-sm sm:text-lg font-medium text-black mb-1">Date</p>
-          <p className="text-lg sm:text-2xl font-semibold text-black">
-            {dateLabel}
-          </p>
-        </div>
-
-        <div>
-          <p className="text-sm sm:text-lg font-medium text-black mb-1">
-            Departure Time Range (EST)
-          </p>
-          <p className="text-lg sm:text-2xl font-semibold text-black">
-            {timeLabel}
-          </p>
-        </div>
-      </div>
-
-      <div className="h-px bg-border my-3 sm:my-4" />
-
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
-        <div className="flex items-center gap-3 sm:gap-4">
-          <div className="h-10 w-10 sm:h-12 sm:w-12 flex items-center justify-center rounded-full bg-muted text-lg sm:text-2xl font-semibold text-black">
-            {ownerName[0]}
+    <div className={isPast ? "opacity-50 grayscale" : ""}>
+      <Card className="rounded-2xl border border-border bg-white px-3 sm:px-6 py-3 sm:py-4 shadow-card hover:shadow-cardHover cursor-pointer">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-1">
+          <div>
+            <p className="text-sm sm:text-lg font-medium text-black mb-1">
+              Leaving from
+            </p>
+            <p className="text-lg sm:text-2xl font-semibold text-black break-words">
+              {ride.beginning}
+            </p>
           </div>
-          <div className="flex flex-col gap-1 text-black">
-            <span className="text-lg sm:text-xl">{ownerName}</span>
-            <span className="text-sm sm:text-xl text-black break-all">
-              {/* {ride.ownerPhone
+
+          <div>
+            <p className="text-sm sm:text-lg font-medium text-black mb-1">
+              Going to
+            </p>
+            <p className="text-lg sm:text-2xl font-semibold text-black break-words">
+              {ride.destination}
+            </p>
+          </div>
+
+          <div>
+            <p className="text-sm sm:text-lg font-medium text-black mb-1">
+              Date
+            </p>
+            <p className="text-lg sm:text-2xl font-semibold text-black">
+              {dateLabel}
+            </p>
+          </div>
+
+          <div>
+            <p className="text-sm sm:text-lg font-medium text-black mb-1">
+              Departure Time Range (EST)
+            </p>
+            <p className="text-lg sm:text-2xl font-semibold text-black">
+              {timeLabel}
+            </p>
+          </div>
+        </div>
+
+        <div className="h-px bg-border my-3 sm:my-4" />
+
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="h-10 w-10 sm:h-12 sm:w-12 flex items-center justify-center rounded-full bg-muted text-lg sm:text-2xl font-semibold text-black">
+              {ownerName[0]}
+            </div>
+            <div className="flex flex-col gap-1 text-black">
+              <span className="text-lg sm:text-xl">{ownerName}</span>
+              <span className="text-sm sm:text-xl text-black break-all">
+                {/* {ride.ownerPhone
                 ? formatPhoneNumberIntl(ride.ownerPhone)
                 : "No phone provided"} */}
-            <span className ="text-lg sm:text-xl">{ownerEmail}</span>
-            </span>
+                <span className="text-lg sm:text-xl">{ownerEmail}</span>
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 self-end sm:self-auto">
+            {!hideBookmark && !isPast && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleBookmark();
+                }}
+              >
+                <Bookmark
+                  className="h-4 w-4 sm:h-5 sm:w-5 text-primary"
+                  style={{ fill: isBookmarked ? "currentColor" : "none" }}
+                />
+              </Button>
+            )}
           </div>
         </div>
-
-        <div className="flex items-center gap-2 self-end sm:self-auto">
-          {!hideBookmark && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleBookmark();
-              }}
-            >
-              <Bookmark
-                className="h-4 w-4 sm:h-5 sm:w-5 text-primary"
-                style={{ fill: isBookmarked ? "currentColor" : "none" }}
-              />
-            </Button>
-          )}
-        </div>
-      </div>
-    </Card>
+      </Card>
+    </div>
   );
 
   if (!showDialog) {
@@ -174,7 +180,8 @@ export function FeedRideCard({
               </div>
             )}
             <div className="text-lg text-black mt-1">
-              Car: {ride.hasCar ? "Have a car" : "Willing to split with Uber/Lyft"}
+              Car:{" "}
+              {ride.hasCar ? "Have a car" : "Willing to split with Uber/Lyft"}
             </div>
             <div className="text-lg text-black mt-1">
               Description:{" "}
