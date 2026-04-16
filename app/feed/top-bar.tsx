@@ -5,11 +5,7 @@ import * as React from "react";
 import { format } from "date-fns";
 import { ChevronsUpDown } from "lucide-react";
 
-import {
-  encodeDate,
-  createStartEndDateTimes,
-  isNextDay,
-} from "@/lib/parsers/time";
+import { createStartEndDateTimes, isNextDay } from "@/lib/time";
 import { useToast } from "@/hooks/useToast";
 
 import { Button } from "@/components/ui/button";
@@ -21,8 +17,8 @@ import {
 } from "@/components/ui/popover";
 
 import { TimeSelect } from "@/components/ui/time-select";
-import { LocationCombobox } from "@/components/search";
-import { ShareYideDialog } from "@/components/rides";
+import { LocationCombobox } from "./location-combobox";
+import { ShareYideDialog } from "./ShareYideDialog";
 import { DateTime } from "luxon";
 
 import { Ride } from "@/prisma/generated/prisma/client";
@@ -57,7 +53,6 @@ export function TopBar({ onResults, rides }: TopBarProps) {
   const [description, setDescription] = React.useState("");
   const [hasCar, setHasCar] = React.useState(false);
 
-
   // New state to track if a search is active
   const [hasSearched, setHasSearched] = React.useState(false);
 
@@ -71,8 +66,6 @@ export function TopBar({ onResults, rides }: TopBarProps) {
     organizerNameError: "",
     phoneNumberError: "",
   });
-
-
 
   // Easter Egg
   function checkHarvardRedirect(destination: string): boolean {
@@ -109,14 +102,14 @@ export function TopBar({ onResults, rides }: TopBarProps) {
     const params = new URLSearchParams();
     if (hasFrom) params.set("from", from);
     if (hasTo) params.set("to", to);
-    if (hasDate && date) params.set("date", encodeDate(date));
+    if (hasDate && date) params.set("date", date.toISOString());
     if (hasStart) params.set("startTime", startTime);
     if (hasEnd) params.set("endTime", endTime);
 
     const qs = params.toString();
 
     try {
-      const res = await fetch(`/api/rides/search?${qs}`);
+      const res = await fetch(`/api/ride/search?${qs}`);
       if (!res.ok) throw new Error("Network error");
       const ridesResult: Ride[] = await res.json();
       onResults(ridesResult);
@@ -152,7 +145,7 @@ export function TopBar({ onResults, rides }: TopBarProps) {
     const { startTimeObject, endTimeObject } = createStartEndDateTimes(
       selectedDate,
       startTime,
-      endTime,
+      endTime
     );
 
     const rideData = {
@@ -164,11 +157,11 @@ export function TopBar({ onResults, rides }: TopBarProps) {
       startTime: startTimeObject,
       endTime: endTimeObject,
       totalSeats: additionalPassengers + 1,
-      hasCar: hasCar
+      hasCar: hasCar,
     };
 
     try {
-      const res = await fetch(`${API_BASE}/api/rides/post`, {
+      const res = await fetch(`${API_BASE}/api/ride/post`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(rideData),
@@ -282,7 +275,7 @@ export function TopBar({ onResults, rides }: TopBarProps) {
                       month: d.getMonth() + 1,
                       day: d.getDate(),
                     },
-                    { zone: timeZone },
+                    { zone: timeZone }
                   ).startOf("day");
                   const etToday = DateTime.now()
                     .setZone(timeZone)
@@ -298,7 +291,7 @@ export function TopBar({ onResults, rides }: TopBarProps) {
                       month: selectedDate.getMonth() + 1,
                       day: selectedDate.getDate(),
                     },
-                    { zone: timeZone },
+                    { zone: timeZone }
                   ).startOf("day");
                   const etToday = DateTime.now()
                     .setZone(timeZone)
@@ -442,8 +435,8 @@ export function TopBar({ onResults, rides }: TopBarProps) {
         description={description}
         setDescription={setDescription}
         handleShareYide={handleShareYide}
-        hasCar={hasCar}          
-        setHasCar={setHasCar} 
+        hasCar={hasCar}
+        setHasCar={setHasCar}
       />
     </div>
   );
