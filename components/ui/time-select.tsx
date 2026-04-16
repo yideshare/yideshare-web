@@ -11,7 +11,7 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
-import { isNextDay } from "@/lib/parsers/time";
+import { isNextDay } from "@/lib/time";
 
 /* ------------------------------------------------------------------ */
 /*  create “12:00 AM”, “12:15 AM”, …                                   */

@@ -3,9 +3,10 @@ export class SetupTestUser {
   constructor(private page: Page) {}
 
   async loginAsTestUser() {
-    await this.page.goto("/api/auth/test-login");
+    await this.page.goto("/api/test-utils/login");
     await this.page.goto("/feed");
   }
+  // FIXME: create db instances in testing? need more time to figure out
   async resetDatabase() {
     const response = await this.page.request.post("/api/test-utils/reset-db");
     if (!response.ok()) {
