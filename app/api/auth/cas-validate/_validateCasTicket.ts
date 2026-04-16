@@ -1,4 +1,4 @@
-import { getCasUrl } from "../_url";
+import { getCasUrl } from "../../_url";
 
 /**
  * @internal
@@ -13,9 +13,7 @@ export async function validateCasTicket(
   const serviceParam = `&service=${encodeURIComponent(serviceUrl)}`;
   const validateUrl = `${casUrl}/serviceValidate${ticketParam}${serviceParam}`;
 
-  console.log(validateUrl);
-
-  // CAS tickets are single use, never chace the response
+  // CAS tickets are single use, never cache the response
   const res = await fetch(validateUrl, { cache: "no-store" });
   if (!res.ok) {
     return null;
@@ -26,7 +24,7 @@ export async function validateCasTicket(
     // Extract netId from success response
     const netIdMatch = text.match(/<cas:user>(.*?)<\/cas:user>/);
     if (netIdMatch) {
-      console.info(
+      console.log(
         "CAS Validate: Successfully extracted netId:",
         netIdMatch[1]
       );

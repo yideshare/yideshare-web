@@ -1,22 +1,22 @@
 import { NextResponse } from "next/server";
 
 import { createJWT } from "@/lib/auth";
-import { withApiErrorHandler, ApiError } from "@/lib/infra";
+import { withApiErrorHandler, ApiError } from "@/lib/apiErrorHandler";
 
 import { fetchYaliesData } from "./_fetchYaliesData";
 import { resolveSafeRedirect } from "./_resolveSafeRedirect";
 import { validateCasTicket } from "./_validateCasTicket";
 import { encodeRedirectParam } from "../_parse";
-import { getYideshareUrl } from "../_url";
+import { getYideshareUrl } from "../../_url";
 import { findUserByNetId, createUser } from "./_user";
 
 /**
  * Login requests get redirected here after logging in with CAS!
  *
  * Handles GET requests to validate a user's CAS ticket.
- * If no redirect parameter provided or redirect parameter provided but is unsafe,
- * this API redirects user to `yideshareURL`/feed.
- * If a safe redirect paramter provided, this API redirects user to the requested page.
+ * If no redirect parameter provided, or an unsafe redirect parameter provided,
+ * redirects user to `yideshareURL`/feed.
+ * If a safe redirect paramter provided, redirects user to the requested page.
  */
 async function handleCasValidate(req: Request) {
   // Preserve redirect search parameters from middleware requests
@@ -51,15 +51,11 @@ async function handleCasValidate(req: Request) {
     await createUser(netId, firstName, lastName, email);
   }
 
-  /**
-   * Returns `yideshareURL`/feed if redirect parameter not provided or
-   * redirect parameter provided but not safe.
-   * Retruns a redirect URL if redirect paramter safe.
-   */
   const redirectTo = resolveSafeRedirect(requestSearchParams, yideshareUrl);
   const successResponse = NextResponse.redirect(redirectTo);
+
+  // Create & authentication cookie
   const jwtSigned = await createJWT(firstName, lastName, email, netId);
-  // Set authentication cookie
   successResponse.cookies.set("auth", jwtSigned, {
     httpOnly: true, // Prevent client-side access
     path: "/",
@@ -67,13 +63,13 @@ async function handleCasValidate(req: Request) {
     sameSite: "lax",
     /**
      * Make sure cookies and token expire at the same time for consistency;
-     * maxAge set to 3600s = 1h to match the fallback JWT_EXPIRES_IN value
+     * maxAge set to 3600s = 1h to match value in `createJWT` function
      */
     maxAge: 3600,
   });
 
-  console.info("CAS Validate: Successfully authenticated user:", netId);
-  console.info("CAS Validate: Redirecting to:", redirectTo);
+  console.log("CAS Validate: Successfully authenticated user:", netId);
+  console.log("CAS Validate: Redirecting to:", redirectTo);
   return successResponse;
 }
 

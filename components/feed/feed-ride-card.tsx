@@ -52,7 +52,7 @@ export function FeedRideCard({
   /* ------------ bookmark ------------ */
   async function handleBookmark() {
     try {
-      const res = await fetch(`${API_BASE}/api/bookmark`, {
+      const res = await fetch(`${API_BASE}/api/ride/toggle-bookmark`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ rideId: ride.rideId }),

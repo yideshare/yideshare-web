@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 
-import { withApiErrorHandler } from "@/lib/infra";
+import { withApiErrorHandler } from "@/lib/apiErrorHandler";
 
-import { getYideshareUrl } from "../_url";
+import { getYideshareUrl } from "../../_url";
 
 /**
  * Handles GET logout requests.
  * In development or testing, deletes the user's auth cookie,
  * and redirects to the yideshare base URL.
- * In production, redirects to Yale CAS logout first to destroy the SSO session,
+ * In production, redirects to Yale CAS logout to destroy the SSO session,
  * then returns the user to the yideshare base URL.
  */
 async function handleLogout(req: Request) {
