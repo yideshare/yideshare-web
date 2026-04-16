@@ -1,6 +1,5 @@
 import { PrismaClient } from "@/prisma/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { logger } from "@/lib/infra";
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
@@ -47,7 +46,7 @@ async function main(): Promise<void> {
 
 main()
   .catch((error) => {
-    logger.error(error);
+    console.error(error);
     process.exit(1);
   })
   .finally(async () => {
