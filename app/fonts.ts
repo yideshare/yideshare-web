@@ -11,5 +11,3 @@ export const lexend = localFont({
   display: 'swap',
   variable: '--font-lexend',
 });
-
-//hi this is lauren! testing to see whether this is how i can commit changes... 
