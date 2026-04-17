@@ -1,23 +1,16 @@
-// app/bookmarks/page.tsx
-
 import { findBookmarkedRides } from "@/lib/db";
 import { getUserNetIdFromCookies } from "@/lib/cookies";
 
-import BookmarksClient from "./bookmarks-client";
+import BookmarksClient from "./BookmarksClient";
 
 export default async function BookmarkPage() {
-  // get user cookies
   const netId = await getUserNetIdFromCookies();
 
-  // if no user cookies were found
   if (netId === null) {
     return <div>Please log in to view your rides.</div>;
   }
 
-  // fetch bookmarked rides for the authenticated user
   const bookmarks = await findBookmarkedRides(netId);
-
-  // extract the rides from the prisma query
   const bookmarkedRides = bookmarks.map((b) => b.ride);
 
   return <BookmarksClient bookmarkedRides={bookmarkedRides} />;
