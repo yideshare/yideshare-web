@@ -39,7 +39,7 @@ export class RideFunctions {
   }
 
   async createValidRideViaPopup(date?: Date) {
-    //temp: first fill in date in the top-bar because it's not yet in the ShareYideDialog
+    //temp: first fill in date in the top-bar because it's not yet in the ShareRideDialog
     await this.page
       .getByRole("combobox", { name: /select departure date/i })
       .click();
@@ -61,7 +61,7 @@ export class RideFunctions {
     const emailInput = dialog.getByRole("textbox", { name: /email address/i });
     await expect(emailInput).toHaveAttribute("readonly", "");
     await expect(emailInput).toHaveValue(/@/);
-    
+
     await dialog
       .getByRole("textbox", { name: /leaving from \*/i })
       .fill("Vegas");
