@@ -16,8 +16,15 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import { FeedRideCardProps } from "@/app/interface/main";
 import { DateTime } from "luxon";
+
+import type { Ride } from "@/prisma/generated/prisma/client";
+
+interface FeedRideCardProps {
+  ride: Ride;
+  isBookmarkedInitial: boolean;
+  showDialog?: boolean;
+}
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "";
 export function FeedRideCard({
