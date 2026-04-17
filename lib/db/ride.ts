@@ -27,3 +27,16 @@ export async function findBookmarkedRides(netId: string) {
     select: { ride: true },
   });
 }
+
+/**
+ * Fetches all open rides owned by a specific user, ordered by most recent.
+ *
+ * @param netId - The NetID of the ride owner
+ * @returns A list of open rides belonging to the user
+ */
+export async function findOwnedRides(netId: string) {
+  return prisma.ride.findMany({
+    where: { ownerNetId: netId, isClosed: false },
+    orderBy: { startTime: "desc" },
+  });
+}

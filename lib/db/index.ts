@@ -1,5 +1,6 @@
 export { prisma } from "./prisma";
 export {
   findManyRides,
-  findBookmarkedRides
+  findBookmarkedRides,
+  findOwnedRides,
 } from "./ride";
