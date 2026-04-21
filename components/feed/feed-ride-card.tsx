@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
+//update the disappering feature
 import { FeedRideCardProps } from "@/app/interface/main";
 import { DateTime } from "luxon";
 
