@@ -161,7 +161,6 @@ export function FeedRideCard({
   return (
     <Dialog>
       <DialogTrigger asChild>{cardContent}</DialogTrigger>
-
       {/* -------- Dialog -------- */}
       <DialogContent>
         <DialogHeader>
