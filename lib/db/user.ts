@@ -1,30 +1,8 @@
-import { prisma } from "@/lib/db";
-import { logger } from "@/lib/infra";
 import { cookies } from "next/headers";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { jwtVerify } from "jose";
 
-export async function findOrCreateUser(
-  netId: string,
-  firstName: string,
-  lastName: string,
-  email: string,
-) {
-  // try to find user
-  let user = await prisma.user.findUnique({ where: { netId } });
 
-  // if user found
-  if (user) {
-    logger.info("DB USER: User found in the database:", user);
-    // otherwise
-  } else {
-    user = await prisma.user.create({
-      data: { netId, name: `${firstName} ${lastName}`, email },
-    });
-    logger.info("DB USER: New user added to the database:", user);
-  }
-  return user;
-}
 
 export async function getUserFromCookies(cookieStore: ReadonlyRequestCookies) {
   // retrieve cookies

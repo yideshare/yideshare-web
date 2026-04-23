@@ -41,6 +41,7 @@ next-env.d.ts
 # db files
 prisma/dev*
 prisma/migrations
+prisma/generated
 
 # logs
 /logs

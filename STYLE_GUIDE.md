@@ -24,8 +24,9 @@ This document defines coding standards and conventions for the YideShare project
 16. [Spacing & Line Length](#spacing--line-length)
 17. [Class & Object Literal Syntax](#class-syntax)
 18. [API Routes & Server Actions](#api-routes--server-actions)
-19. [Contributing](#contributing)
-20. [Questions & Clarifications](#questions--clarifications)
+19. [Private Functions & Components](#private-functions--components)
+20. [Contributing](#contributing)
+21. [Questions & Clarifications](#questions--clarifications)
 
 ---
 
@@ -326,7 +327,7 @@ const message = "Hello, World!";
 const greeting = `Hello, ${name}!`;
 
 // INCORRECT
-const message = "Hello, World!";
+const message = 'Hello, World!';
 ```
 
 ### Template Literals
@@ -700,7 +701,7 @@ export function SearchBar() {
 - Array methods (.map, .filter, etc.)
 
 ```typescript
-// ✓ CORRECT
+// CORRECT
 export function calculateDistance(lat1: number, lat2: number): number {
   // Named function for public API
   const earthRadius = 6371;
@@ -1367,6 +1368,7 @@ export function validateEmail(email: string): boolean {
 - Utility files: **camelCase** (e.g., `user.ts`, `ride.ts`, `validate.ts`)
 - Page files: **lowercase** (e.g., `page.tsx`, `layout.tsx`) Next.js convention
 - Index files: use `index.ts` when exporting multiple items from a directory
+- Private files: prefix with underscore (e.g., `_helpers.ts`, `_validation.ts`)
 
 ```
 components/
@@ -1384,6 +1386,7 @@ app/
   layout.tsx
   feed/
     page.tsx
+    _feedHelpers.ts
 ```
 
 ### File Size
@@ -1532,6 +1535,7 @@ app/api/
 
 ### Route Handler Structure
 
+- Include a brief description comment at the top explaining what the API does
 - Specify supported HTTP methods
 - Validate input
 - Return typed responses
@@ -1540,6 +1544,11 @@ app/api/
 ```typescript
 // CORRECT - app/api/rides/create/route.ts
 import { NextRequest, NextResponse } from "next/server";
+
+/*
+ * Creates a new ride with the provided departure, destination, and time.
+ * Validates required fields and returns the created ride ID.
+ */
 
 interface CreateRideRequest {
   departure: string;
@@ -1582,6 +1591,7 @@ export async function POST(
 
 // INCORRECT
 export async function POST(request: NextRequest) {
+  // Missing description comment
   const body = await request.json();
   const ride = await createRideInDb(body); // No validation
   return NextResponse.json({ id: ride.id }); // No error handling
@@ -1625,27 +1635,153 @@ export async function createBookmark(
 
 ---
 
+## Private Functions & Components
+
+### File Organization for Private Code
+
+- Private functions and components used only in a specific page or API route must be kept in the same folder as the page/route
+- Prefix the filename with an underscore to indicate it's private
+- Use JSDoc to explicitly mark functions/components as private
+
+### Private File Naming
+
+```
+app/
+  feed/
+    page.tsx
+    _feedHelpers.ts      # Private helpers for feed page
+    _RideFilter.tsx      # Private component for feed page
+  
+api/
+  auth/
+    cas-validate/
+      route.ts
+      _validateTicket.ts # Private function for this route
+      _findUser.ts       # Private function for this route
+```
+
+### Private Function Documentation
+
+- Always include JSDoc with `@internal` and `@private` tags
+- Specify which route or file the function is private to
+
+```typescript
+// CORRECT - _validateTicket.ts
+/**
+ * @internal
+ * @private Only for use within /api/auth/cas-validate route.
+ */
+export async function validateCasTicket(
+  ticket: string,
+  serviceUrl: string,
+): Promise<boolean> {
+  // Implementation
+}
+
+// CORRECT - _feedHelpers.ts
+/**
+ * @internal
+ * @private Only for use within /app/feed page.
+ */
+export function sortRidesByDepartureTime(rides: Ride[]): Ride[] {
+  return rides.sort((a, b) => 
+    a.departureTime.getTime() - b.departureTime.getTime()
+  );
+}
+
+// CORRECT - _RideFilter.tsx
+/**
+ * @internal
+ * @private Only for use within /app/feed page.
+ */
+export function RideFilter({ onFilterChange }: RideFilterProps) {
+  // Component implementation
+}
+
+// INCORRECT - No JSDoc marking it as private
+export function validateCasTicket(ticket: string): Promise<boolean> {
+  // Missing @internal and @private tags
+}
+
+// INCORRECT - Not prefixed with underscore
+// helpers.ts (should be _helpers.ts)
+export function sortRides(rides: Ride[]): Ride[] {
+  // ...
+}
+```
+
+### When to Use Private Files
+
+Use private files when:
+- Function/component is only used within a single page or route
+- Logic is specific to that page/route and won't be reused elsewhere
+- You want to keep implementation details encapsulated
+
+Don't use private files when:
+- Function/component is used across multiple pages/routes
+- Logic is generic enough to be in a shared utility folder
+- You want the function to be part of the public API
+
+---
+
 ## Contributing
 
 ### Pull Requests
 
-All code changes require a pull request review before merging to maintain code quality and consistency.
+All code changes require a pull request review before merging to maintain code quality and consistency. Use the following template for all pull requests:
+
+```markdown
+## Summary
+<!-- Give a summary of what you did. -->
+
+## Related Issues (Optional)
+<!-- Link to issues that this PR addresses -->
+- Closes #123
+- Fixes #456
+- Relates to #789
+
+## Changes
+- [ ] New Feature
+- [ ] Bug Fix
+- [ ] Refactor (non-breaking code change that improves readability/structure)
+- [ ] Performance Improvement
+- [ ] Security Improvement
+- [ ] Documentation Update
+- [ ] Test Update / New Tests
+- [ ] Configuration / CI / Build Change
+- [ ] Other (please describe)
+
+## Main Contributors
+<!-- List main people that worked on this solution -->
+
+## Screenshots (if applicable)
+<!-- Drag & drop or link -->
+
+## Checklist
+- [ ] PR targets the `main` branch
+- [ ] At least one reviewer assigned
+- [ ] Tests added or updated
+- [ ] Documentation updated (if needed)
+- [ ] All conversations resolved
+- [ ] Linked issues are referenced above (if applicable)
+
+## Notes for Reviewers
+<!-- Anything specific you'd like reviewers to focus on -->
+```
+
+### PR Guidelines
 
 - Target the `main` branch
-- Write a clear, descriptive title summarizing the changes
-- Explain what was done and why in the summary
+- Write a clear, descriptive summary of what was changed and why
 - Link related issues with keywords: `Closes #123`, `Fixes #456`, `Relates to #789`
-- Specify the type of change (Feature, Bug Fix, Refactor, Performance, etc.)
-- List main contributors if multiple people worked on the PR
+- Check all applicable boxes in the Changes section
+- List all main contributors if multiple people worked on the PR
 - Include screenshots or recordings for UI changes
 - Assign at least one reviewer before merging
-
-### PR Review Process
-
-- Require at least one approval before merging
+- Fill out the "Notes for Reviewers" section to highlight areas needing special attention
 - Address all feedback before re-requesting review
 - Keep PRs focused on a single concern; split large changes into multiple PRs if needed
-- Highlight areas that need special reviewer attention
+- Resolve all conversations before merging
 
 ### Conventional Commits
 
@@ -1718,6 +1854,7 @@ Before committing code, verify:
 - **Naming**: PascalCase for components/types, camelCase for functions/variables
 - **Brackets**: Correct placement, always used
 - **Comments**: Meaningful, explain "why" not "what", use JSDoc for public functions
+- **Private Files**: Prefixed with underscore, marked with @internal and @private JSDoc
 - **Imports**: Organized in groups, using path aliases
 - **Quotes**: Double quotes for strings, backticks for templates
 - **Types**: TypeScript strict mode, no `any`, specify return types
@@ -1728,6 +1865,7 @@ Before committing code, verify:
 - **Line Length**: Under 100 characters where possible
 - **No Dead Code**: Remove unused functions, imports, files
 - **File Organization**: Logical structure, reasonable file size
+- **API Routes**: Include brief description comment at the top
 
 **Before Committing:**
 
@@ -1741,7 +1879,7 @@ Before committing code, verify:
 - Documentation is updated (if needed)
 - All CI/CD checks pass locally
 - At least one reviewer assigned
-- PR summary clearly describes the changes and why
+- PR follows the required template format
 - Related issues are referenced
 - All conversations on previous feedback are resolved
 
@@ -1755,4 +1893,4 @@ For questions about applying this style guide:
 2. Look for the "CORRECT" example
 3. If still unclear, ask the team lead
 
-Last Updated: January 2026
+Last Updated: February 2026

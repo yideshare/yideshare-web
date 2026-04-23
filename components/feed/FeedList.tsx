@@ -1,5 +1,5 @@
 import { FeedRideCard } from "@/components/feed";
-import { Ride } from "@prisma/client";
+import { Ride } from "@/prisma/generated/prisma/client";
 import React from "react";
 import { Trash2, Pencil } from "lucide-react";
 

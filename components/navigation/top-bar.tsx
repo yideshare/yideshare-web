@@ -5,8 +5,6 @@ import * as React from "react";
 import { format } from "date-fns";
 import { ChevronsUpDown } from "lucide-react";
 
-// import debounce from "lodash.debounce";
-
 import {
   encodeDate,
   createStartEndDateTimes,
@@ -27,7 +25,7 @@ import { LocationCombobox } from "@/components/search";
 import { ShareYideDialog } from "@/components/rides";
 import { DateTime } from "luxon";
 
-import { Ride } from "@prisma/client";
+import { Ride } from "@/prisma/generated/prisma/client";
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "";
 
 /* -------------------------------------------------------------------------- */
@@ -95,7 +93,7 @@ export function TopBar({ onResults, rides }: TopBarProps) {
     const hasDate = date !== null;
     const hasStart = startTime.trim().length > 0;
     const hasEnd = endTime.trim().length > 0;
-    const hasTimeWindow = hasStart && hasEnd;
+    const hasTimeWindow = hasStart || hasEnd;
 
     if (!(hasFrom || hasTo || hasDate || hasTimeWindow)) {
       toast({
@@ -112,10 +110,8 @@ export function TopBar({ onResults, rides }: TopBarProps) {
     if (hasFrom) params.set("from", from);
     if (hasTo) params.set("to", to);
     if (hasDate && date) params.set("date", encodeDate(date));
-    if (hasTimeWindow) {
-      params.set("startTime", startTime);
-      params.set("endTime", endTime);
-    }
+    if (hasStart) params.set("startTime", startTime);
+    if (hasEnd) params.set("endTime", endTime);
 
     const qs = params.toString();
 

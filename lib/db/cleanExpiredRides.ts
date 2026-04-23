@@ -1,11 +1,9 @@
 import { prisma } from "@/lib/db";
-import { logger } from "@/lib/infra"
 
-// add this to a vercel cron script when deployed
-
-async function closeExpiredRides() {
+export async function closeExpiredRides() {
   const now = new Date();
 
+  // Close expired rides
   const result = await prisma.ride.updateMany({
     where: {
       endTime: {
@@ -17,10 +15,9 @@ async function closeExpiredRides() {
       isClosed: true,
     },
   });
+  
+  // Log number of rides closed
+  console.log(`DB RIDE: Closed ${result.count} expired rides.`);
 
-  logger.info(`DB RIDE: Closed ${result.count} expired rides.`);
+  return { ridesClosed: result.count };
 }
-
-closeExpiredRides().catch((error) => {
-  logger.error("DB RIDE: Error closing expired rides:", error);
-});
