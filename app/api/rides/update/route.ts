@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { Ride } from "@prisma/client";
-import { prisma, getUserNetIdFromCookies } from "@/lib/db";
+import { Ride } from "@/prisma/generated/prisma/client";
+import { prisma, getUserNetIdFromCookies} from "@/lib/db";
 import { withApiErrorHandler, ApiError } from "@/lib/infra";
 
 /**

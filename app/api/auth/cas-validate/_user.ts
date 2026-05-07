@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { User } from "@prisma/client";
+import { User } from "@/prisma/generated/prisma/client";
 
 /**
  * @internal
