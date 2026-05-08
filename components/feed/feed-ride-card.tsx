@@ -26,9 +26,12 @@ export function FeedRideCard({
   showDialog = true,
   hideBookmark = false, // add default
   onUnbookmark,
+  // FIXME: temporary solution; get rid of canGreyOut
+  canGreyOut,
 }: FeedRideCardProps & {
   hideBookmark?: boolean;
   onUnbookmark?: (rideId: string) => void;
+  canGreyOut: boolean;
 }) {
   const { toast } = useToast();
   const [isBookmarked, setIsBookmarked] = React.useState(isBookmarkedInitial);
@@ -74,7 +77,7 @@ export function FeedRideCard({
 
   /* ------------ UI ------------ */
   const cardContent = (
-    <div className={isPast ? "opacity-50 grayscale" : ""}>
+    <div className={(isPast && canGreyOut) ? "opacity-50 grayscale" : ""}>
       <Card className="rounded-2xl border border-border bg-white px-3 sm:px-6 py-3 sm:py-4 shadow-card hover:shadow-cardHover cursor-pointer">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-1">
           <div>

@@ -23,7 +23,8 @@ export function FeedList({
   onDelete,
   editable = false,
   onUnbookmark,
-}: FeedListProps) {
+  canGreyOut = true
+}: FeedListProps & { canGreyOut?: boolean }) {
   if (!rides.length) {
     return <p className="text-black">No rides available.</p>;
   }
@@ -59,6 +60,7 @@ export function FeedList({
             showDialog={showDialog}
             hideBookmark={hideBookmark}
             onUnbookmark={onUnbookmark}
+            canGreyOut={canGreyOut}
           />
         </div>
       ))}

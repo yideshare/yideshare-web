@@ -109,6 +109,7 @@ export default function YourRidesClient({
             bookmarkedRideIds={bookmarkedRideIds}
             showDialog={false}
             hideBookmark={true}
+            canGreyOut={false}
             editable
             onEdit={(ride: Ride) => {
               setEditingRide(ride);
