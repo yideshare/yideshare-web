@@ -7,7 +7,7 @@ const DEFAULT_TOTAL_SEATS = 4;
 
 /**
  * @internal
- * @private Only for use within /api/rides/post route.
+ * @private Only for use within /api/ride/post route.
  */
 export async function createRide(
   ride: Ride,

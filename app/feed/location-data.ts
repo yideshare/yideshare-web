@@ -12,7 +12,7 @@ export const LOCATIONS: LocationItem[] = [
   { label: "JFK Airport", address: "Queens NY 11430" },
   { label: "LaGuardia Airport (LGA)", address: "Queens NY 11371" },
   { label: "Newark Liberty Airport (EWR)", address: "3 Brewster Rd, Newark NJ 07114" },
-  { label: "State Street Station", address: " 370 State St, New Haven CT 06510" },
+  { label: "State Street Station", address: "370 State St, New Haven CT 06510" },
 
   /* ——— Yale Colleges ——— */
   { label: "Silliman College", address: "505 College St, New Haven CT 06511" },

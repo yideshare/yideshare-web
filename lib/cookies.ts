@@ -4,7 +4,6 @@ import type { AuthUser } from "@/app/interface/main";
 
 /**
  * Parses and validates the "auth" cookie, returning an authenticated user.
- * Supports both JWT and legacy JSON cookie formats.
  *
  * @for API routes
  * @returns The authenticated {@link AuthUser} or null if user retrieval fails.

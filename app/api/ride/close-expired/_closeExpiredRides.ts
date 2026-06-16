@@ -2,7 +2,7 @@ import { prisma } from "@/lib/db";
 
 /**
  * @internal
- * @private Only for use within /api/rides/close-expired route.
+ * @private Only for use within /api/ride/close-expired route.
  */
 export async function closeExpiredRides() {
   const now = new Date();

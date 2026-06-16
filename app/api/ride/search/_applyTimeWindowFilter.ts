@@ -9,7 +9,7 @@ import {
 
 /**
  * @internal
- * @private Only for use within /api/rides/search route.
+ * @private Only for use within /api/ride/search route.
  *
  * Filters rides to those whose time window overlaps the requested time range.
  * Used when a user specifies a time-of-day range but no specific date,
