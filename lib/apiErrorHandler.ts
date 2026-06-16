@@ -33,16 +33,22 @@ export function withApiErrorHandler(
       return await handler(req);
     } catch (error) {
       console.error("API Error:", error);
-      const status = error instanceof ApiError ? error.status : 500;
 
+      var status_msg:number;
+      var err_msg:string;
+
+      if (error instanceof ApiError) {
+        status_msg = error.status;
+        err_msg = error.message;
+      } else {
+        status_msg = 500;
+        err_msg = "An unexpected error occurred"
+      }
       return NextResponse.json(
         {
-          error:
-            error instanceof Error
-              ? error.message
-              : "An unexpected error occurred",
-        },
-        { status }
+          error: err_msg,
+          status: status_msg
+        }
       );
     }
   };
