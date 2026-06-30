@@ -3,7 +3,7 @@ export interface LocationItem {
     label: string;
     address: string;
   }
-  
+
   export const LOCATIONS: LocationItem[] = [
     /* ——— Transportation ——— */
     { label: "Union Station (NHV)", address: "50 Union Ave, New Haven CT 06519" },
@@ -12,8 +12,8 @@ export interface LocationItem {
     { label: "JFK Airport", address: "Queens NY 11430" },
     { label: "LaGuardia Airport (LGA)", address: "Queens NY 11371" },
     { label: "Newark Liberty Airport (EWR)", address: "3 Brewster Rd, Newark NJ 07114" },
-    { label: "State Street Station", address: " 370 State St, New Haven CT 06510" },
-    
+    { label: "State Street Station", address: "370 State St, New Haven CT 06510" },
+
     /* ——— Yale Colleges ——— */
     { label: "Silliman College", address: "505 College St, New Haven CT 06511" },
     { label: "Timothy Dwight", address: "345 Temple St, New Haven CT 06511" },
@@ -56,7 +56,7 @@ export interface LocationItem {
     { label: "Claire's Corner Copia", address: "1000 Chapel St, New Haven CT 06510" },
     { label: "Frank Pepe Pizzeria Napoletana", address: "157 Wooster St, New Haven CT 06511" },
     { label: "Sally's Apizza New Haven", address: "237 Wooster St, New Haven CT 06511" },
-  
+
     /* ——— Shopping / essentials ——— */
     { label: "IKEA New Haven", address: "450 Sargent Dr, New Haven CT 06511" },
     { label: "Target New Haven", address: "310 Foxon Blvd, New Haven CT 06513" },
@@ -64,4 +64,3 @@ export interface LocationItem {
     { label: "Stop & Shop (Whalley Ave)", address: "150 Whalley Ave, New Haven CT 06511" },
     { label: "Harvard University", address: "1256 Massachusetts Ave, Cambridge MA 02138" }
   ];
-  

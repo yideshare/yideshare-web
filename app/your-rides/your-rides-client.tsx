@@ -4,7 +4,7 @@ import * as React from "react";
 import { Separator } from "@/components/ui/separator";
 import { FeedHeader, FeedSortBar, FeedList } from "@/components/feed";
 import { useSortedRides } from "@/hooks/useSortedRides";
-import { EditRideDialog } from "@/components/rides";
+import { EditRideDialog } from "./EditRideDialog";
 import { useToast } from "@/hooks/useToast";
 import { Ride } from "@/prisma/generated/prisma/client";
 
@@ -33,7 +33,7 @@ export default function YourRidesClient({
   // delete ride and show toast notification
   const handleDeleteRide = async (rideId: string) => {
     try {
-      const res = await fetch(`${API_BASE}/api/rides/update?rideId=${rideId}`, {
+      const res = await fetch(`${API_BASE}/api/ride/update?rideId=${rideId}`, {
         method: "DELETE",
       });
 
@@ -66,7 +66,7 @@ export default function YourRidesClient({
 
     try {
       const res = await fetch(
-        `${API_BASE}/api/rides/update?rideId=${editingRide.rideId}`,
+        `${API_BASE}/api/ride/update?rideId=${editingRide.rideId}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },

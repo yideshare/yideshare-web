@@ -1,5 +1,4 @@
-import { Ride } from "@/prisma/generated/prisma/client";
-import { Prisma } from "@/prisma/generated/prisma/client";
+import type { Ride, User } from "@/prisma/generated/prisma/client";
 
 export interface FeedPageClientProps {
   initialRides: Ride[];
@@ -20,12 +19,12 @@ export interface searchParamsType {
   endTime: string;
 }
 
-export interface RideWhereClauseWithArrayAND {
-  AND: Prisma.RideWhereInput[];
-}
-
 export interface YaliesData {
   first_name: string;
   last_name: string;
   email: string;
 }
+
+// Subset of User returned from cookie authentication; excludes binary/nullable fields
+export type AuthUser = Pick<User, "netId" | "name" | "email">;
+

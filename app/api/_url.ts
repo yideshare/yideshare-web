@@ -14,7 +14,7 @@ export function getCasUrl(): string {
 
 /**
  * @internal
- * @private Only for use within /api/auth/ route.
+ * @private Only for use within /api/ route.
  */
 export function getYideshareUrl(req: Request): string {
   try {

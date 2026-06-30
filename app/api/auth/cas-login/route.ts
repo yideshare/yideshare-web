@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 
-import { withApiErrorHandler } from "@/lib/infra";
+import { withApiErrorHandler } from "@/lib/apiErrorHandler";
 
 import { encodeRedirectParam } from "../_parse";
-import { getYideshareUrl, getCasUrl } from "../_url";
+import { getYideshareUrl, getCasUrl } from "../../_url";
 
 /**
  * Handles GET login requests.

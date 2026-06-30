@@ -1,6 +1,7 @@
 // app/bookmarks/page.tsx
 
-import { getUserNetIdFromCookies, findBookmarkedRides } from "@/lib/db";
+import { findBookmarkedRides } from "@/lib/db";
+import { getUserNetIdFromCookies } from "@/lib/cookies";
 
 import BookmarksClient from "./bookmarks-client";
 

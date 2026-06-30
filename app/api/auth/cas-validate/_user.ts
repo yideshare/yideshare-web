@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
-import { User } from "@/prisma/generated/prisma/client";
+
+import type { User } from "@/prisma/generated/prisma/client";
 
 /**
  * @internal
@@ -9,7 +10,7 @@ export async function findUserByNetId(netId: string): Promise<User | null> {
   const user = await prisma.user.findUnique({ where: { netId } });
 
   if (user) {
-    console.info("DB: User found in database:", user);
+    console.log("DB: User found in database:", user);
     return user;
   }
 
@@ -24,10 +25,10 @@ export async function createUser(
   netId: string,
   firstName: string,
   lastName: string,
-  email: string
-) {
+  email: string,
+): Promise<void> {
   const user = await prisma.user.create({
     data: { netId, name: `${firstName} ${lastName}`, email },
   });
-  console.info("DB: New user added to database:", user);
+  console.log("DB: New user added to database:", user);
 }

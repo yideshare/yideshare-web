@@ -659,31 +659,6 @@ function _calculateAge(birthDate: Date) {
 export function getUserData(userId: string) {}
 ```
 
-### Arrow Functions in React Components
-
-- Use arrow functions for event handlers and callbacks
-- Keep them concise for simple operations
-
-```typescript
-// CORRECT
-export function SearchBar() {
-  const handleSearch = (query: string) => {
-    console.log("Searching for:", query);
-  };
-
-  return <input onChange={(e) => handleSearch(e.target.value)} />;
-}
-
-// INCORRECT
-export function SearchBar() {
-  function handleSearch(query: string) {
-    console.log("Searching for:", query);
-  }
-
-  return <input onChange={(e) => handleSearch(e.target.value)} />;
-}
-```
-
 ---
 
 ## Arrow Functions vs Named Functions
@@ -696,7 +671,7 @@ export function SearchBar() {
 
 ### Use Arrow Functions For:
 
-- Callbacks and event handlers
+- Callbacks and event handlers in React components
 - Short, single-expression functions
 - Array methods (.map, .filter, etc.)
 
@@ -789,9 +764,8 @@ export async function fetchRideDetails(rideId: string) {
 
 ### Variable Type Annotations
 
-- Omit type annotations when TypeScript can infer the type
-- Include type annotations for function parameters and return types
-- Include type annotations for exported variables and constants
+- Omit type annotations for basic types (e.g. string, number, bool)
+- Include type annotations for exported function parameters and return types
 
 ```typescript
 // CORRECT
@@ -803,7 +777,7 @@ const user = await fetchUser(id); // User
 const rides: Ride[] = [];
 const config: Record<string, unknown> = JSON.parse(configJson);
 
-// Function parameters always need types
+// Public functions need types
 export function validateEmail(email: string): boolean {
   // ...
 }
@@ -896,31 +870,6 @@ interface User {
 }
 ```
 
-### Generics
-
-- Use clear, descriptive names for generic types (not just `T`, `U`, `V`)
-- Include constraints when appropriate
-
-```typescript
-// CORRECT
-export function transformArray<Item>(items: Item[]): Item[] {
-  // ...
-}
-
-export function cache<Data extends { id: string }>(key: string, data: Data) {
-  // ...
-}
-
-// INCORRECT
-export function transformArray<T>(items: T[]): T[] {
-  // ...
-}
-
-export function cache<T>(key: string, data: T) {
-  // ...
-}
-```
-
 ---
 
 ## Imports & Exports
@@ -964,7 +913,7 @@ import { cn } from "@/lib/frontend";
 
 - Always use path aliases (`@/`) instead of relative imports
 - This makes refactoring easier and improves readability
-- Use relative paths only when creating an `index.ts` file to organize lower level imports
+- Use relative paths only when creating an `index.ts` file or importing from private submodule (e.g. `_timeHelpers.ts`) 
 
 ```typescript
 // CORRECT
@@ -1019,26 +968,10 @@ export default function Home() {
 
 // feedClient.tsx
 ("use client");
-
 export default function FeedPageClient() {
   return <div>Feed</div>;
 }
 ```
-
-### Type Imports
-
-- Use `import type` for type-only imports
-
-```typescript
-// CORRECT
-import type { User, Ride } from "@/app/interface/main";
-import { getUserData } from "@/lib/user";
-
-// INCORRECT
-import { User, Ride, getUserData } from "@/app/interface/main";
-```
-
----
 
 ## Props & Interface Definitions
 
@@ -1542,7 +1475,7 @@ app/api/
 - Include error handling
 
 ```typescript
-// CORRECT - app/api/rides/create/route.ts
+// CORRECT - app/api/ride/create/route.ts
 import { NextRequest, NextResponse } from "next/server";
 
 /*
@@ -1678,26 +1611,6 @@ export async function validateCasTicket(
   // Implementation
 }
 
-// CORRECT - _feedHelpers.ts
-/**
- * @internal
- * @private Only for use within /app/feed page.
- */
-export function sortRidesByDepartureTime(rides: Ride[]): Ride[] {
-  return rides.sort((a, b) => 
-    a.departureTime.getTime() - b.departureTime.getTime()
-  );
-}
-
-// CORRECT - _RideFilter.tsx
-/**
- * @internal
- * @private Only for use within /app/feed page.
- */
-export function RideFilter({ onFilterChange }: RideFilterProps) {
-  // Component implementation
-}
-
 // INCORRECT - No JSDoc marking it as private
 export function validateCasTicket(ticket: string): Promise<boolean> {
   // Missing @internal and @private tags
@@ -1716,11 +1629,6 @@ Use private files when:
 - Function/component is only used within a single page or route
 - Logic is specific to that page/route and won't be reused elsewhere
 - You want to keep implementation details encapsulated
-
-Don't use private files when:
-- Function/component is used across multiple pages/routes
-- Logic is generic enough to be in a shared utility folder
-- You want the function to be part of the public API
 
 ---
 

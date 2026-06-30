@@ -4,6 +4,10 @@
  */
 import { YaliesData } from "@/app/interface/main";
 
+/**
+ * @internal
+ * @private Only for use within /api/auth/cas-validate route.
+ */
 export async function fetchYaliesData(
   netId: string
 ): Promise<YaliesData | undefined> {

@@ -2,21 +2,19 @@ import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/db";
 import { createJWT } from "@/lib/auth";
-import { ApiError, withApiErrorHandler } from "@/lib/infra";
+import { ApiError, withApiErrorHandler } from "@/lib/apiErrorHandler";
 
-import { getYideshareUrl } from "../_url";
+import { getYideshareUrl } from "../../_url";
 
 /**
  * For testing purposes only, forbidden in production!
- * 
+ *
  * Handles GET test login requests.
  * Creates (or upserts) a test user in the database.
- * Sets an auth cookie for that user, 
+ * Sets an auth cookie for that user,
  * and redirects to `yideshareURL`/feed.
  */
-async function testLoginHandler(req: Request) {
-  
-  // Forbidden in production
+async function testLoginHandler(req: Request): Promise<NextResponse> {
   if (process.env.NODE_ENV === "production") {
     throw new ApiError("Not allowed", 403);
   }
@@ -24,7 +22,7 @@ async function testLoginHandler(req: Request) {
   const yideshareUrl = getYideshareUrl(req);
   const response = NextResponse.redirect(`${yideshareUrl}/feed`);
 
-  createTestUser();
+  await createTestUser();
 
   const jwtSigned = await createJWT(
     "Test",
@@ -32,7 +30,7 @@ async function testLoginHandler(req: Request) {
     "test.user@yale.edu",
     "testuser"
   );
-  // Set authentication cookie
+
   response.cookies.set("auth", jwtSigned, {
     httpOnly: true,
     path: "/",

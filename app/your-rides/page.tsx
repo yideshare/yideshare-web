@@ -2,7 +2,8 @@
 
 import { redirect } from "next/navigation";
 
-import { prisma, findBookmarkedRides, getUserNetIdFromCookies } from "@/lib/db";
+import { prisma, findBookmarkedRides } from "@/lib/db";
+import { getUserNetIdFromCookies } from "@/lib/cookies";
 
 import YourRidesClient from "./your-rides-client";
 

@@ -3,6 +3,9 @@ const ALLOWED_REDIRECT_PREFIXES = ["/feed", "/bookmarks", "/your-rides"];
 /**
  * @internal
  * @private Only for use within /api/auth/cas-validate route.
+ *
+ * Returns a redirect to /feed page if redirect parameter not provided or unsafe.
+ * Returns a redirect URL if redirect parameter is safe.
  */
 export function resolveSafeRedirect(
   requestSearchParams: URLSearchParams,

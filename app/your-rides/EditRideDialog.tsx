@@ -17,8 +17,18 @@ import { TimeSelect } from "@/components/ui/time-select";
 import { Ride } from "@/prisma/generated/prisma/client";
 import { useState } from "react";
 import { CustomPhoneInput } from "@/components/ui/phone-input";
-import { createStartEndDateTimes, formatTimeForDisplay } from "@/lib/parsers/time";
-import { CustomSelect} from "@/components/ui/select";
+import { createStartEndDateTimes } from "@/lib/time";
+import { CustomSelect } from "@/components/ui/select";
+
+import { DateTime } from "luxon";
+
+import { TIME_ZONE } from "@/lib/const";
+
+
+// Format a JS Date for display as Eastern Time (America/New_York)
+export function formatTimeForDisplay(date: Date): string {
+  return DateTime.fromJSDate(date).setZone(TIME_ZONE).toFormat("hh:mm a");
+}
 
 // logic flow that handles next-day scenarios
 const createUpdatedTimes = (
@@ -37,9 +47,9 @@ const createUpdatedTimes = (
 };
 
 interface EditRideDialogProps {
-  open: boolean;
-  setOpen: (v: boolean) => void;
   ride: Ride;
+  setOpen: (v: boolean) => void;
+  open: boolean;
   onSave: (updatedRide: Partial<Ride>) => Promise<void>;
 }
 
@@ -56,6 +66,8 @@ export function EditRideDialog({
   const [phoneError, setPhoneError] = React.useState<string | undefined>(
     undefined
   );
+  const [organizerEmail, setOrganizerEmail] = React.useState(ride.ownerEmail || "")
+
   const [formData, setFormData] = useState({
     from: ride.beginning,
     to: ride.destination,
@@ -70,8 +82,6 @@ export function EditRideDialog({
   });
 
   const [hasCar, setHasCar] = React.useState<boolean>(ride.hasCar ?? false);
-  
-  ;
 
   const ready =
     formData.from &&
@@ -100,41 +110,12 @@ export function EditRideDialog({
       totalSeats: formData.additionalPassengers + 1,
       ownerName: organizerName,
       ownerPhone: phoneNumber,
-      hasCar: hasCar
+      hasCar: hasCar,
     };
     await onSave(updatedRide);
     setOpen(false);
   };
 
-
-    const [meLoading, setMeLoading] = React.useState(true);
-    const [meError, setMeError] = React.useState<string | null>(null);
-    const [userEmail, setUserEmail] = React.useState("");
-    
-    React.useEffect(() => {
-      let ignore = false;
-      (async () => {
-        try {
-          setMeLoading(true);
-          setMeError(null);
-          const res = await fetch("/api/me", { method: "GET", cache: "no-store" });
-          if (!res.ok) throw new Error(`Failed to load user (${res.status})`);
-          const me = await res.json(); // { netId, name, email }
-          if (!ignore) {
-            if (me?.name) setOrganizerName(me.name);
-            if (me?.email) setUserEmail(me.email);
-          }
-        } catch (e: any) {
-          if (!ignore) setMeError(e?.message ?? "Failed to load user");
-        } finally {
-          if (!ignore) setMeLoading(false);
-        }
-      })();
-      return () => {
-        ignore = true;
-      };
-    }, [setOrganizerName]);
-  
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -156,10 +137,9 @@ export function EditRideDialog({
               id="organizer"
               value={organizerName}
               readOnly
-              placeholder={meLoading ? "Loading..." : meError ? "Failed to load" : "Full name"}
+              placeholder={"Full name"}
               className="text-base"
             />
-            {meError && <p className="text-xs text-red-500">{meError}</p>}
           </div>
 
           <div className="space-y-2 text-base">
@@ -177,13 +157,13 @@ export function EditRideDialog({
             <Input
               id="email"
               type="email"
-              value={userEmail}
+              value={organizerEmail}
               readOnly
-              placeholder={meLoading ? "Loading..." : meError ? "Failed to load" : "Email"}
+              placeholder={"Email"}
               className="text-base"
             />
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-2">
               <Label htmlFor="from">
@@ -250,7 +230,8 @@ export function EditRideDialog({
             <CustomSelect
               label={
                 <>
-                  Do you have your own car? <span className="text-red-500">*</span>
+                  Do you have your own car?{" "}
+                  <span className="text-red-500">*</span>
                 </>
               }
               options={[
