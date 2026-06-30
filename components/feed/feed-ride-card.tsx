@@ -31,14 +31,19 @@ export function FeedRideCard({
   ride,
   isBookmarkedInitial,
   showDialog = true,
-  hideBookmark = false, // add default
+  hideBookmark = false,
   onUnbookmark,
+  // FIXME: temporary solution; get rid of canGreyOut
+  canGreyOut = true,
 }: FeedRideCardProps & {
   hideBookmark?: boolean;
   onUnbookmark?: (rideId: string) => void;
+  canGreyOut?: boolean;
 }) {
   const { toast } = useToast();
   const [isBookmarked, setIsBookmarked] = React.useState(isBookmarkedInitial);
+
+  const isPast = new Date(ride.endTime) < new Date();
 
   /* ------------ helpers ------------ */
   const ownerName = ride.ownerName ?? "Driver";
@@ -79,6 +84,7 @@ export function FeedRideCard({
 
   /* ------------ UI ------------ */
   const cardContent = (
+    <div className={(isPast && canGreyOut) ? "opacity-50 grayscale" : ""}>
     <Card className="rounded-2xl border border-border bg-white px-3 sm:px-6 py-3 sm:py-4 shadow-card hover:shadow-cardHover cursor-pointer">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-1">
         <div>
@@ -135,7 +141,7 @@ export function FeedRideCard({
         </div>
 
         <div className="flex items-center gap-2 self-end sm:self-auto">
-          {!hideBookmark && (
+          {!hideBookmark && !isPast && (
             <Button
               variant="ghost"
               size="icon"
@@ -153,6 +159,7 @@ export function FeedRideCard({
         </div>
       </div>
     </Card>
+    </div>
   );
 
   if (!showDialog) {
