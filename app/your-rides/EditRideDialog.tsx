@@ -1,9 +1,9 @@
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
+
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -14,37 +14,18 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { TimeSelect } from "@/components/ui/time-select";
-import { Ride } from "@/prisma/generated/prisma/client";
-import { useState } from "react";
 import { CustomPhoneInput } from "@/components/ui/phone-input";
-import { createStartEndDateTimes } from "@/lib/time";
 import { CustomSelect } from "@/components/ui/select";
+import { createStartEndDateTimes } from "@/lib/time";
+import { TIME_ZONE } from "@/lib/const";
+import type { Ride } from "@/prisma/generated/prisma/client";
 
 import { DateTime } from "luxon";
-
-import { TIME_ZONE } from "@/lib/const";
-
 
 // Format a JS Date for display as Eastern Time (America/New_York)
 export function formatTimeForDisplay(date: Date): string {
   return DateTime.fromJSDate(date).setZone(TIME_ZONE).toFormat("hh:mm a");
 }
-
-// logic flow that handles next-day scenarios
-const createUpdatedTimes = (
-  startTimeStr: string,
-  endTimeStr: string,
-  originalStartTime: Date
-) => {
-  // use the original date as the base date for the time conversion
-  const baseDate = new Date(originalStartTime);
-  const { startTimeObject, endTimeObject } = createStartEndDateTimes(
-    baseDate,
-    startTimeStr,
-    endTimeStr
-  );
-  return { startTimeObject, endTimeObject };
-};
 
 interface EditRideDialogProps {
   ride: Ride;
@@ -59,14 +40,9 @@ export function EditRideDialog({
   ride,
   onSave,
 }: EditRideDialogProps) {
-  const [organizerName, setOrganizerName] = React.useState(
-    ride.ownerName || ""
-  );
-  const [phoneNumber, setPhoneNumber] = React.useState(ride.ownerPhone || "");
-  const [phoneError, setPhoneError] = React.useState<string | undefined>(
-    undefined
-  );
-  const [organizerEmail, setOrganizerEmail] = React.useState(ride.ownerEmail || "")
+  const [organizerName] = useState(ride.ownerName || "");
+  const [phoneNumber, setPhoneNumber] = useState(ride.ownerPhone || "");
+  const [phoneError, setPhoneError] = useState<string | undefined>(undefined);
 
   const [formData, setFormData] = useState({
     from: ride.beginning,
@@ -81,7 +57,7 @@ export function EditRideDialog({
     additionalPassengers: ride.totalSeats - 1,
   });
 
-  const [hasCar, setHasCar] = React.useState<boolean>(ride.hasCar ?? false);
+  const [hasCar, setHasCar] = useState<boolean>(ride.hasCar ?? false);
 
   const ready =
     formData.from &&
@@ -95,10 +71,11 @@ export function EditRideDialog({
     e.preventDefault();
     if (!ready) return;
 
-    const { startTimeObject, endTimeObject } = createUpdatedTimes(
+    const baseDate = new Date(ride.startTime);
+    const { startTimeObject, endTimeObject } = createStartEndDateTimes(
+      baseDate,
       formData.startTime,
-      formData.endTime,
-      new Date(ride.startTime)
+      formData.endTime
     );
 
     const updatedRide = {
@@ -110,7 +87,7 @@ export function EditRideDialog({
       totalSeats: formData.additionalPassengers + 1,
       ownerName: organizerName,
       ownerPhone: phoneNumber,
-      hasCar: hasCar,
+      hasCar,
     };
     await onSave(updatedRide);
     setOpen(false);
@@ -118,10 +95,6 @@ export function EditRideDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <span />
-      </DialogTrigger>
-
       <DialogContent className="w-full max-w-sm sm:max-w-xl bg-white m-1 max-h-[calc(100dvh-1rem)] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-lg sm:text-xl">Edit Ride</DialogTitle>
@@ -145,11 +118,13 @@ export function EditRideDialog({
           <div className="space-y-2 text-base">
             <CustomPhoneInput
               label="Phone Number"
-              // required
               value={phoneNumber}
               onChange={setPhoneNumber}
               onErrorChange={setPhoneError}
             />
+            {phoneError && (
+              <p className="text-sm text-red-500">{phoneError}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -157,7 +132,7 @@ export function EditRideDialog({
             <Input
               id="email"
               type="email"
-              value={organizerEmail}
+              value={ride.ownerEmail || ""}
               readOnly
               placeholder={"Email"}
               className="text-base"
@@ -236,7 +211,7 @@ export function EditRideDialog({
               }
               options={[
                 { value: "yes", label: "Yes" },
-                { value: "no", label: "No, I’d like to split with Uber/Lyft" },
+                { value: "no", label: "No, I'd like to split with Uber/Lyft" },
               ]}
               value={hasCar ? "yes" : "no"}
               onChange={(value) => setHasCar(value === "yes")}

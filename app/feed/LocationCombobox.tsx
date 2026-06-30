@@ -1,8 +1,8 @@
-// REVISIT THIS COMPONENT, USED AI SLOP
+// TODO: review this component
 
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 
 import { cn } from "@/lib/frontend";
@@ -20,7 +20,7 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 
-import { LOCATIONS as INITIAL_LOCATIONS, LocationItem } from "./location-data";
+import { LOCATIONS as INITIAL_LOCATIONS, LocationItem } from "./_locationData";
 
 interface LocationComboboxProps {
   label: string;
@@ -30,6 +30,7 @@ interface LocationComboboxProps {
   "aria-label"?: string;
   className?: string;
 }
+
 export function LocationCombobox({
   label,
   placeholder,
@@ -38,35 +39,26 @@ export function LocationCombobox({
   "aria-label": ariaLabel,
   className,
 }: LocationComboboxProps) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [items, setItems] = useState<LocationItem[]>(INITIAL_LOCATIONS);
+  const [inputValue, setInputValue] = useState("");
 
-  // mutable list of options
-  const [items, setItems] = React.useState<LocationItem[]>(INITIAL_LOCATIONS);
-
-  // track what the user is typing
-  const [inputValue, setInputValue] = React.useState("");
-
-  // filter against item list
   const filtered = items.filter((loc) =>
     loc.label.toLowerCase().includes(inputValue.toLowerCase())
   );
 
-  // detect when to offer "creatable"
   const customOption =
     inputValue.trim().length > 0 &&
     !items.some((loc) => loc.label.toLowerCase() === inputValue.toLowerCase());
 
-  // who's currently selected
   const selected = items.find((loc) => loc.label === value);
 
-  // select an existing item
   function handleSelect(label: string) {
     onChange(label);
     setOpen(false);
     setInputValue("");
   }
 
-  // create a brand-new item (using address = label)
   function handleCreate() {
     const newItem: LocationItem = {
       label: inputValue,

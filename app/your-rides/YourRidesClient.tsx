@@ -1,36 +1,29 @@
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
+
 import { Separator } from "@/components/ui/separator";
 import { FeedHeader, FeedSortBar, FeedList } from "@/components/feed";
 import { useSortedRides } from "@/hooks/useSortedRides";
-import { EditRideDialog } from "./EditRideDialog";
 import { useToast } from "@/hooks/useToast";
-import { Ride } from "@/prisma/generated/prisma/client";
+import type { Ride } from "@/prisma/generated/prisma/client";
+
+import { EditRideDialog } from "./EditRideDialog";
 
 interface YourRidesClientProps {
   ownedRides: Ride[];
-  bookmarkedRideIds: string[];
 }
+
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "";
 
-export default function YourRidesClient({
-  ownedRides,
-  bookmarkedRideIds,
-}: YourRidesClientProps) {
+export default function YourRidesClient({ ownedRides }: YourRidesClientProps) {
   const { toast } = useToast();
-  const [sortBy, setSortBy] = React.useState<string>("recent");
-  const [localRides, setLocalRides] = React.useState<Ride[]>(ownedRides);
-  const [editingRide, setEditingRide] = React.useState<Ride | null>(null);
-  const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false);
-
-  React.useEffect(() => {
-    setLocalRides(ownedRides);
-  }, [ownedRides]);
+  const [sortBy, setSortBy] = useState<string>("recent");
+  const [localRides, setLocalRides] = useState<Ride[]>(ownedRides);
+  const [editingRide, setEditingRide] = useState<Ride | null>(null);
 
   const sortedRides = useSortedRides(localRides, sortBy);
 
-  // delete ride and show toast notification
   const handleDeleteRide = async (rideId: string) => {
     try {
       const res = await fetch(`${API_BASE}/api/ride/update?rideId=${rideId}`, {
@@ -42,7 +35,7 @@ export default function YourRidesClient({
         throw new Error(error.error || "Failed to delete ride");
       }
 
-      setLocalRides(localRides.filter((ride) => ride.rideId !== rideId));
+      setLocalRides((prev) => prev.filter((ride) => ride.rideId !== rideId));
 
       toast({
         title: "Ride Deleted",
@@ -60,7 +53,6 @@ export default function YourRidesClient({
     }
   };
 
-  // edit ride and show toast notification
   const handleEditRide = async (updatedRide: Partial<Ride>) => {
     if (!editingRide) return;
 
@@ -78,8 +70,8 @@ export default function YourRidesClient({
 
       const updatedRideData = await res.json();
 
-      setLocalRides(
-        localRides.map((ride) =>
+      setLocalRides((prev) =>
+        prev.map((ride) =>
           ride.rideId === editingRide.rideId ? updatedRideData : ride
         )
       );
@@ -106,23 +98,22 @@ export default function YourRidesClient({
         <div className="pt-16 flex justify-center">
           <FeedList
             rides={sortedRides}
-            bookmarkedRideIds={bookmarkedRideIds}
+            bookmarkedRideIds={[]}
             showDialog={false}
             hideBookmark={true}
             canGreyOut={false}
             editable
-            onEdit={(ride: Ride) => {
-              setEditingRide(ride);
-              setIsEditDialogOpen(true);
-            }}
+            onEdit={(ride: Ride) => setEditingRide(ride)}
             onDelete={handleDeleteRide}
           />
         </div>
       </div>
       {editingRide && (
         <EditRideDialog
-          open={isEditDialogOpen}
-          setOpen={setIsEditDialogOpen}
+          open={true}
+          setOpen={(v) => {
+            if (!v) setEditingRide(null);
+          }}
           ride={editingRide}
           onSave={handleEditRide}
         />

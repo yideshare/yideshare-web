@@ -1,7 +1,10 @@
-// yideshare/components/ShareYideDialog.tsx
 "use client";
 
-import * as React from "react";
+import { useState, useEffect, FormEvent } from "react";
+
+import { createStartEndDateTimes } from "@/lib/time";
+import { useToast } from "@/hooks/useToast";
+
 import {
   Dialog,
   DialogTrigger,
@@ -18,72 +21,61 @@ import { CustomSelect } from "@/components/ui/select";
 import { TimeSelect } from "@/components/ui/time-select";
 import { CustomPhoneInput } from "@/components/ui/phone-input";
 
-/* -------------------------------------------------------------------------- */
-/*  props                                                                     */
-/* -------------------------------------------------------------------------- */
-interface ShareYideDialogProps {
+import type { Ride } from "@/prisma/generated/prisma/client";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "";
+
+// ------- TYPES -------
+
+interface ShareRideDialogProps {
   open: boolean;
   setOpen: (v: boolean) => void;
 
-  /* data already present in the top bar – keep them in sync */
+  /* Shared search fields — kept in sync with the top bar */
   from: string;
   setFrom: (v: string) => void;
   to: string;
   setTo: (v: string) => void;
+  date: Date | null;
   startTime: string;
   setStartTime: (v: string) => void;
   endTime: string;
   setEndTime: (v: string) => void;
 
-  /* dialog‑only fields */
-  organizerName: string;
-  setOrganizerName: (v: string) => void;
-  phoneNumber: string;
-  setPhoneNumber: (v: string) => void;
-  // phoneNumberError?: string;
-  useremail: string;
-  setUseremail: (v: string) => void;
-  additionalPassengers: number;
-  setAdditionalPassengers: (v: number) => void;
-  description: string;
-  setDescription: (v: string) => void;
-  hasCar: boolean;
-  setHasCar: (v: boolean) => void;
-  handleShareYide: (e: React.FormEvent) => Promise<void>;
+  rides?: Ride[];
+  onSuccess: (rides: Ride[]) => void;
 }
 
-export function ShareYideDialog({
+// ------- COMPONENT -------
+
+export function ShareRideDialog({
   open,
   setOpen,
   from,
   setFrom,
   to,
   setTo,
+  date,
   startTime,
   setStartTime,
   endTime,
   setEndTime,
-  organizerName,
-  setOrganizerName,
-  phoneNumber,
-  setPhoneNumber,
-  additionalPassengers,
-  setAdditionalPassengers,
-  description,
-  setDescription,
-  handleShareYide,
-  hasCar,
-  setHasCar,
-}: ShareYideDialogProps) {
-  const [phoneError, setPhoneError] = React.useState<string | undefined>(
-    undefined
-  );
+  rides,
+  onSuccess,
+}: ShareRideDialogProps) {
+  const { toast } = useToast();
 
-  const [meLoading, setMeLoading] = React.useState(true);
-  const [meError, setMeError] = React.useState<string | null>(null);
-  const [userEmail, setUserEmail] = React.useState("");
+  const [organizerName, setOrganizerName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [additionalPassengers, setAdditionalPassengers] = useState(3);
+  const [description, setDescription] = useState("");
+  const [hasCar, setHasCar] = useState(false);
 
-  React.useEffect(() => {
+  const [meLoading, setMeLoading] = useState(true);
+  const [meError, setMeError] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState("");
+
+  useEffect(() => {
     let ignore = false;
     (async () => {
       try {
@@ -91,13 +83,15 @@ export function ShareYideDialog({
         setMeError(null);
         const res = await fetch("/api/me", { method: "GET", cache: "no-store" });
         if (!res.ok) throw new Error(`Failed to load user (${res.status})`);
-        const me = await res.json(); // { netId, name, email }
+        const me = await res.json();
         if (!ignore) {
           if (me?.name) setOrganizerName(me.name);
           if (me?.email) setUserEmail(me.email);
         }
-      } catch (e: any) {
-        if (!ignore) setMeError(e?.message ?? "Failed to load user");
+      } catch (e: unknown) {
+        if (!ignore) {
+          setMeError(e instanceof Error ? e.message : "Failed to load user");
+        }
       } finally {
         if (!ignore) setMeLoading(false);
       }
@@ -105,19 +99,100 @@ export function ShareYideDialog({
     return () => {
       ignore = true;
     };
-  }, [setOrganizerName]);
+  }, []);
 
-  const ready =
-    from && to && startTime && endTime && organizerName; //in future, can add more checks
+  // TODO: add more required field validation
+  const ready = from && to && startTime && endTime && organizerName;
+
+  async function handleShareRide(e: FormEvent) {
+    e.preventDefault();
+
+    // Easter Egg
+    if (to.trim().toLowerCase() === "harvard university") {
+      window.location.href = "https://www.youtube.com/watch?v=bMM3z3o6BAs";
+      return;
+    }
+
+    // TODO: remove once date field is added to the post ride popup
+    if (!date) {
+      toast({
+        title: "Select a date",
+        description: "Please choose a date before posting a ride.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const { startTimeObject, endTimeObject } = createStartEndDateTimes(
+      date,
+      startTime,
+      endTime
+    );
+
+    const rideData = {
+      ownerName: organizerName,
+      ownerPhone: phoneNumber,
+      beginning: from,
+      destination: to,
+      description,
+      startTime: startTimeObject,
+      endTime: endTimeObject,
+      totalSeats: additionalPassengers + 1,
+      hasCar,
+    };
+
+    try {
+      const res = await fetch(`${API_BASE}/api/ride/post`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(rideData),
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Failed to post ride");
+      }
+
+      const newRide = await res.json();
+
+      if (rides) {
+        onSuccess([newRide.ride, ...rides]);
+      }
+
+      setFrom("");
+      setTo("");
+      setStartTime("");
+      setEndTime("");
+      setOrganizerName("");
+      setPhoneNumber("");
+      setAdditionalPassengers(0);
+      setDescription("");
+      setHasCar(false);
+
+      toast({
+        title: "Ride Posted",
+        description: "Your ride has been successfully posted.",
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to post ride. Please try again.",
+        variant: "destructive",
+      });
+    }
+  }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <span />
       </DialogTrigger>
 
-      <DialogContent
-        className="w-full max-w-sm sm:max-w-xl bg-white m-1 max-h-[calc(100dvh-1rem)] overflow-y-auto"
-      >
+      <DialogContent className="w-full max-w-sm sm:max-w-xl bg-white m-1 max-h-[calc(100dvh-1rem)] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-lg sm:text-xl">Share a Ride</DialogTitle>
           <DialogDescription className="text-sm sm:text-base">
@@ -127,12 +202,11 @@ export function ShareYideDialog({
 
         <form
           onSubmit={(e) => {
-            handleShareYide(e);
+            handleShareRide(e);
             setOpen(false);
           }}
           className="space-y-2 sm:space-y-4"
         >
-
           <div className="space-y-2">
             <Label htmlFor="organizer">Organizer name</Label>
             <Input
@@ -145,14 +219,11 @@ export function ShareYideDialog({
             {meError && <p className="text-xs text-red-500">{meError}</p>}
           </div>
 
-
           <div className="space-y-2 text-base">
             <CustomPhoneInput
               label="Phone Number"
-              // required
               value={phoneNumber}
               onChange={setPhoneNumber}
-              onErrorChange={setPhoneError}
             />
           </div>
 

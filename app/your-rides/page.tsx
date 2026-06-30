@@ -2,34 +2,19 @@
 
 import { redirect } from "next/navigation";
 
-import { prisma, findBookmarkedRides } from "@/lib/db";
+import { findOwnedRides } from "@/lib/db";
 import { getUserNetIdFromCookies } from "@/lib/cookies";
 
-import YourRidesClient from "./your-rides-client";
+import YourRidesClient from "./YourRidesClient";
 
 export default async function DashboardPage() {
-  // server-side: verify httpOnly JWT w/ updated helper, chat helped with this sorry guys desperate times
   const netId = await getUserNetIdFromCookies();
   // if netid is null then redirect to CAS login, and if successful login, redirects back to your rides page
   if (!netId) {
     redirect(`/api/auth/cas-login?next=${encodeURIComponent("/your-rides")}`);
   }
 
-  // Fetch all owned rides
-  const ownedRides = await prisma.ride.findMany({
-    where: { ownerNetId: netId, isClosed: false },
-    orderBy: { startTime: "desc" },
-  });
+  const ownedRides = await findOwnedRides(netId);
 
-  // Fetch bookmarks and extract ride IDs
-  const bookmarks = await findBookmarkedRides(netId);
-  const bookmarkedRideIds = bookmarks.map((b) => b.ride.rideId);
-
-  return (
-    <YourRidesClient
-      ownedRides={ownedRides}
-      // Note: though these are passed in they are not shown in the your rides page (hidebookmark set to false in the client)
-      bookmarkedRideIds={bookmarkedRideIds}
-    />
-  );
+  return <YourRidesClient ownedRides={ownedRides} />;
 }
