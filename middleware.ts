@@ -57,6 +57,7 @@ export const config = {
     "/feed/:path*",
     "/bookmarks/:path*",
     "/your-rides/:path*",
+    "/messages/:path*",
     "/api/:path*",
   ],
 };

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Calendar, User, Bookmark, PowerOffIcon } from "lucide-react";
+import { Calendar, User, Bookmark, PowerOffIcon, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/frontend";
 
@@ -21,6 +21,11 @@ const navItems = [
     title: "Saved Rides",
     url: "/bookmarks",
     icon: Bookmark,
+  },
+  {
+    title: "Messages",
+    url: "/messages",
+    icon: MessageSquare,
   },
   {
     title: "Logout",
