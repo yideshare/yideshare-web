@@ -12,11 +12,15 @@ import { EditRideDialog } from "./EditRideDialog";
 
 interface YourRidesClientProps {
   ownedRides: Ride[];
+  currentUserNetId: string;
 }
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "";
 
-export default function YourRidesClient({ ownedRides }: YourRidesClientProps) {
+export default function YourRidesClient({
+  ownedRides,
+  currentUserNetId,
+}: YourRidesClientProps) {
   const { toast } = useToast();
   const [sortBy, setSortBy] = useState<string>("recent");
   const [localRides, setLocalRides] = useState<Ride[]>(ownedRides);
@@ -98,6 +102,7 @@ export default function YourRidesClient({ ownedRides }: YourRidesClientProps) {
         <div className="pt-16 flex justify-center">
           <FeedList
             rides={sortedRides}
+            currentUserNetId={currentUserNetId}
             bookmarkedRideIds={[]}
             showDialog={false}
             hideBookmark={true}
