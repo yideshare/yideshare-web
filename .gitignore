@@ -56,3 +56,6 @@ prisma/generated
 
 # newer eslint
 eslint.config.mjs
+
+#claude
+CLAUDE.md
