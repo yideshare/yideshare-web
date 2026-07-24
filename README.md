@@ -15,9 +15,12 @@ Ensure your `.env` file includes the following variables for local dev:
 - `JWT_SECRET="test_jwt_secret"`
 - `POSTGRES_DB=<come up with your db name>` 
 - `POSTGRES_PASSWORD=<come up with your password`
-- `DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?schema=public`
-- `DIRECT_URL=postgresql://postgres:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?schema=public`
+- `DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@localhost:5434/${POSTGRES_DB}?schema=public`
+- `DIRECT_URL=postgresql://postgres:${POSTGRES_PASSWORD}@localhost:5434/${POSTGRES_DB}?schema=public`
 - `YALIES_API_KEY=<ask admin team>`
+- `RESEND_API_LEY=<ask admin team>`
+- `CRON_SECRET=<ask admin team>`
+
 
 Build and start the Docker container:
 
