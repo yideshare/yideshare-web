@@ -6,6 +6,11 @@ import { ApiError, withApiErrorHandler } from "@/lib/apiErrorHandler";
 
 import { getYideshareUrl } from "../../_url";
 
+const TEST_USERS: Record<string, { firstName: string; lastName: string; email: string }> = {
+  testuser:  { firstName: "Test",  lastName: "User",  email: "test.user@yale.edu" },
+  testuser2: { firstName: "Test",  lastName: "User2", email: "test.user2@yale.edu" },
+};
+
 /**
  * For testing purposes only, forbidden in production!
  *
@@ -19,17 +24,21 @@ async function testLoginHandler(req: Request): Promise<NextResponse> {
     throw new ApiError("Not allowed", 403);
   }
 
+  const netId = new URL(req.url).searchParams.get("as") ?? "testuser";
+  if (!TEST_USERS[netId]) throw new ApiError(`Unknown test user: ${netId}`, 400);
+
+  const { firstName, lastName, email } = TEST_USERS[netId];
+
   const yideshareUrl = getYideshareUrl(req);
   const response = NextResponse.redirect(`${yideshareUrl}/feed`);
 
-  await createTestUser();
+  await prisma.user.upsert({
+    where: { netId },
+    update: {},
+    create: { netId, name: `${firstName} ${lastName}`, email },
+  });
 
-  const jwtSigned = await createJWT(
-    "Test",
-    "User",
-    "test.user@yale.edu",
-    "testuser"
-  );
+  const jwtSigned = await createJWT(firstName, lastName, email, netId);
 
   response.cookies.set("auth", jwtSigned, {
     httpOnly: true,
@@ -47,15 +56,3 @@ async function testLoginHandler(req: Request): Promise<NextResponse> {
 }
 
 export const GET = withApiErrorHandler(testLoginHandler);
-
-async function createTestUser() {
-  await prisma.user.upsert({
-    where: { netId: "testuser" },
-    update: {},
-    create: {
-      netId: "testuser",
-      name: "Test User",
-      email: "test.user@yale.edu",
-    },
-  });
-}
