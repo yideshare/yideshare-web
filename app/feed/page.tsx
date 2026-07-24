@@ -7,7 +7,7 @@ export default async function Feed() {
   const netId = await getUserNetIdFromCookies();
 
   if (netId === null) {
-    return <div>Please log in to view your rides.</div>;
+    return <div>Please log in to view posted rides.</div>;
   }
 
   const numInitialRides = 500;
@@ -19,6 +19,7 @@ export default async function Feed() {
     <FeedPageClient
       initialRides={initialRides}
       bookmarkedRideIds={bookmarkedRideIds}
+      currentUserNetId={netId}
     />
   );
 }

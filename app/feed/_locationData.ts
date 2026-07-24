@@ -5,7 +5,6 @@ export interface LocationItem {
 }
 
 export const LOCATIONS: LocationItem[] = [
-  /* ——— Transportation ——— */
   { label: "Union Station (NHV)", address: "50 Union Ave, New Haven CT 06519" },
   { label: "Tweed New Haven Airport (HVN)", address: "155 Burr St, New Haven CT 06512" },
   { label: "Bradley Intl Airport (BDL)", address: "Schoephoester Rd, Windsor Locks CT 06096" },
@@ -14,7 +13,6 @@ export const LOCATIONS: LocationItem[] = [
   { label: "Newark Liberty Airport (EWR)", address: "3 Brewster Rd, Newark NJ 07114" },
   { label: "State Street Station", address: " 370 State St, New Haven CT 06510" },
 
-  /* ——— Yale Colleges ——— */
   { label: "Silliman College", address: "505 College St, New Haven CT 06511" },
   { label: "Timothy Dwight", address: "345 Temple St, New Haven CT 06511" },
   { label: "Berkeley College", address: "165 Elm St, New Haven CT 06511" },
@@ -30,7 +28,6 @@ export const LOCATIONS: LocationItem[] = [
   { label: "Pauli Murray College", address: "130 Prospect St, New Haven CT 06511" },
   { label: "Grace Hopper College", address: "189 Elm St, New Haven CT 06511" },
 
-  /* ——— Yale campus ——— */
   { label: "Yale Old Campus", address: "344 College St, New Haven CT 06511" },
   { label: "Kline Tower (Science Hill)", address: "219 Prospect St, New Haven CT 06511" },
   { label: "Yale Law School", address: "127 Wall St, New Haven CT 06511" },
@@ -44,11 +41,9 @@ export const LOCATIONS: LocationItem[] = [
   { label: "Yale Schwarzman Center", address: "168 Grove St, New Haven CT 06511" },
   { label: "Yale Divinity School", address: "409 Prospect St, New Haven CT 06511" },
 
-  /* ——— Outdoors / downtown ——— */
   { label: "East Rock Park", address: "41 Cold Spring St, New Haven CT 06511" },
   { label: "New Haven Green", address: "250 Temple St, New Haven CT 06511" },
 
-  /* ——— Student hot‑spots ——— */
   { label: "Yale Bowl", address: "81 Central Ave, New Haven CT 06515" },
   { label: "Toad's Place", address: "300 York St, New Haven CT 06511" },
   { label: "The Yale Bookstore", address: "77 Broadway, New Haven CT 06511" },
@@ -57,7 +52,6 @@ export const LOCATIONS: LocationItem[] = [
   { label: "Frank Pepe Pizzeria Napoletana", address: "157 Wooster St, New Haven CT 06511" },
   { label: "Sally's Apizza New Haven", address: "237 Wooster St, New Haven CT 06511" },
 
-  /* ——— Shopping / essentials ——— */
   { label: "IKEA New Haven", address: "450 Sargent Dr, New Haven CT 06511" },
   { label: "Target New Haven", address: "310 Foxon Blvd, New Haven CT 06513" },
   { label: "Trader Joe's (Orange CT)", address: "230 Boston Post Rd, Orange CT 06477" },

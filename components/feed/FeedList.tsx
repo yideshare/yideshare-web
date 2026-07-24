@@ -5,6 +5,7 @@ import { Trash2, Pencil } from "lucide-react";
 
 interface FeedListProps {
   rides: Ride[];
+  currentUserNetId: string;
   bookmarkedRideIds?: string[];
   showDialog?: boolean;
   hideBookmark?: boolean;
@@ -23,7 +24,8 @@ export function FeedList({
   onDelete,
   editable = false,
   onUnbookmark,
-  canGreyOut = true
+  canGreyOut = true,
+  currentUserNetId,
 }: FeedListProps & { canGreyOut?: boolean }) {
   if (!rides.length) {
     return <p className="text-black">No rides available.</p>;
@@ -61,6 +63,7 @@ export function FeedList({
             hideBookmark={hideBookmark}
             onUnbookmark={onUnbookmark}
             canGreyOut={canGreyOut}
+            currentUserNetId={currentUserNetId}
           />
         </div>
       ))}

@@ -13,11 +13,13 @@ import { TopBar } from "./TopBar";
 interface FeedPageClientProps {
   initialRides: Ride[];
   bookmarkedRideIds: string[];
+  currentUserNetId: string;
 }
 
 export default function FeedPageClient({
   initialRides,
   bookmarkedRideIds,
+  currentUserNetId,
 }: FeedPageClientProps) {
   const [sortBy, setSortBy] = useState("recent");
   const [localRides, setRides] = useState(initialRides);
@@ -33,7 +35,11 @@ export default function FeedPageClient({
         <FeedSortBar sortBy={sortBy} setSortBy={setSortBy} />
         <Separator className="mb-4" />
         <div className="pt-16 flex justify-center">
-          <FeedList rides={sortedRides} bookmarkedRideIds={bookmarkedRideIds} />
+          <FeedList
+            rides={sortedRides}
+            bookmarkedRideIds={bookmarkedRideIds}
+            currentUserNetId={currentUserNetId}
+          />
         </div>
       </div>
     </div>

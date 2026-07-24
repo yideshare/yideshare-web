@@ -31,7 +31,7 @@ interface ShareRideDialogProps {
   open: boolean;
   setOpen: (v: boolean) => void;
 
-  /* Shared search fields — kept in sync with the top bar */
+  /* Shared search fields, kept in sync with the top bar */
   from: string;
   setFrom: (v: string) => void;
   to: string;
