@@ -24,7 +24,6 @@ model User {
   // many-to-many relationship for bookmarks
   bookmarks Bookmark[]
 
-  // [UNUSED] messaging feature 
   sentMessages     Message[]     @relation("MessageSender")
   receivedMessages Message[]     @relation("MessageReceiver")
 
@@ -60,6 +59,8 @@ model Ride {
 
   // many-to-many: many-to-many relationship with Users for bookmarks
   bookmarks Bookmark[]
+
+  messages Message[]
 }
 
 // junction table for many-to-many User-Ride relationship for bookmarks
@@ -100,14 +101,19 @@ model RideRequest {
   receiver User @relation("RequestReceiver", fields: [receiverNetId], references: [netId])
 }
 
-// [UNUSED] placeholder for messaging feature
 model Message {
   messageId     String   @id @default(cuid())
   senderNetId   String
   receiverNetId String
+  rideId        String
   timestamp     DateTime @default(now())
   payload       String
 
   sender   User @relation("MessageSender", fields: [senderNetId], references: [netId])
   receiver User @relation("MessageReceiver", fields: [receiverNetId], references: [netId])
+  ride     Ride @relation(fields: [rideId], references: [rideId])
+
+  @@index([senderNetId, receiverNetId, timestamp])
+  @@index([receiverNetId, senderNetId, timestamp])
+  @@index([rideId, senderNetId, receiverNetId, timestamp])
 }

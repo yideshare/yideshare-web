@@ -1,4 +1,4 @@
-import type { Ride, User } from "@/prisma/generated/prisma/client";
+import type { Message, User } from "@/prisma/generated/prisma/client";
 
 export interface YaliesData {
   first_name: string;
@@ -6,6 +6,25 @@ export interface YaliesData {
   email: string;
 }
 
-// Subset of User returned from cookie authentication; excludes binary/nullable fields
-export type AuthUser = Pick<User, "netId" | "name" | "email">;
+export type AuthUser = Pick<
+  User,
+  "netId" | "name" | "email"
+>;
+
+export type ConversationSummary = {
+  rideId: string;
+  rideBeginning: string;
+  rideDestination: string;
+  peerNetId: string;
+  peerName: string;
+  lastPayload: string;
+  lastTimestamp: string;
+};
+
+export type MessageItem = Pick<
+  Message,
+  "messageId" | "senderNetId" | "payload"
+> & {
+  timestamp: string;
+};
 
