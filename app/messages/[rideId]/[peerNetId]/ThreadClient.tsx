@@ -55,12 +55,12 @@ export default function ThreadClient({ rideId, peerNetId, currentUserNetId }: Th
         body: JSON.stringify({ payload }),
       });
       if (!res.ok) {
-        throw new Error("Failed to send message");
+        throw new Error("Bad API response");
       }
       setText("");
       await mutate();
     } catch (error) {
-      console.error("MSG: Failed to send message: ", error);
+      console.error("Messaging: Failed to send message: ", error);
       toast({
         title: "Message not sent",
         description: "Please try again.",
