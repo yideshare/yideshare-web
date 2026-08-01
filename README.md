@@ -1,110 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Yideshare
 
-## Dev server and DB setup
+Ride sharing for the Yale community. Live at [yideshare.com](https://yideshare.com).
 
-First, run the development server with following commands in coding IDE or local terminal:
+## What it does
 
-(first-time to install package dependencies)
+- **Post you ride.** Set where you're leaving from, where you're headed, when, how many seats are free, and whether you have a car or plan to book an Uber/Lyft.
+- **Search the feed for a match.** Filter by route and time to find people going your way.
+- **Bookmark the rides you're weighing up.** They collect under Bookmarks so you can come back and decide later.
+- **Message the owner without leaving the app.** Replies trigger an email notification so nothing sits unread.
+- **Keep track of what you've posted.** Your Rides shows everything you own, and rides close themselves once their time has passed.
+
+
+Sign-in is Yale CAS, so everyone on the board is a verified member of the Yale community.
+The CAS ticket is validated server side, the account is enriched from the Yalies directory,
+and the session is a JWT that middleware enforces on every protected page and API route.
+
+## Stack
+
+Next.js 15 (App Router) and TypeScript, Prisma on PostgreSQL, Tailwind with shadcn/ui and
+Radix primitives, SWR for client data fetching, Resend for transactional email, Playwright
+for end-to-end tests, deployed on Vercel.
+
+## Running it locally
+
+Install dependencies:
 
 ```bash
 npm install
 ```
 
-Ensure your `.env` file includes the following variables for local dev:
-- `NODE_ENV=development`
-- `JWT_SECRET="test_jwt_secret"`
-- `POSTGRES_DB=<come up with your db name>` 
-- `POSTGRES_PASSWORD=<come up with your password`
-- `DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?schema=public`
-- `DIRECT_URL=postgresql://postgres:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?schema=public`
-- `YALIES_API_KEY=<ask admin team>`
+Create a `.env` with:
 
-Build and start the Docker container:
-
-```bash
-docker compose up -d
+```
+NODE_ENV=development
+JWT_SECRET="test_jwt_secret"
+POSTGRES_DB=<your db name>
+POSTGRES_PASSWORD=<your password>
+DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@localhost:5434/${POSTGRES_DB}?schema=public
+DIRECT_URL=postgresql://postgres:${POSTGRES_PASSWORD}@localhost:5434/${POSTGRES_DB}?schema=public
+YALIES_API_KEY=<ask the admin team>
+RESEND_API_KEY=<ask the admin team>
+CRON_SECRET=<ask the admin team>
 ```
 
-Generate prisma client for types:
+Start Postgres, set up the database, and run the dev server:
 
 ```bash
-npx prisma generate
+docker compose up -d      # Postgres on host port 5434
+npx prisma generate       # regenerate the client after any schema edit
+npx prisma db push        # sync schema to the db
+npm run dev               # http://localhost:3000
 ```
 
-Sync the db with changes in schema file or create if no db:
+Useful extras:
 
 ```bash
-npx prisma db push
+npx prisma db seed        # seed local data
+npx prisma studio         # inspect the db
+docker compose down       # stop containers
+docker compose down -v    # stop AND wipe all database data
 ```
 
-Runs dev server on port 3000
+## Testing
 
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-To stop all running containers:
-
-```bash
-docker compose down
-```
-
-## Helpful DB Commands:
-
-Seed local DB:
-
-```bash
-npx prisma db seed
-```
-
-Inspect local DB:
-
-```bash
-npx prisma studio
-```
-
-Stop the containers AND delete all database data (useful for a clean restart):
-
-```bash
-docker-compose down -v
-```
-
-## Using Playwright:
-
-First, install Playwright browsers (only needed once after installing Playwright):
+Playwright specs live in `playwright-tests/`. Install browsers once, then run:
 
 ```bash
 npx playwright install
-```
-
-Then navigate to testing folder:
-
-```bash
 cd playwright-tests
+npx playwright test --ui   # UI mode, recommended
+npx playwright test        # headless
 ```
 
-Run tests:
+See [playwright-tests/README.md](./playwright-tests/README.md) for details.
 
-UI mode (recommended)
+## Contributing
 
-```bash
-npx playwright test --ui
-```
-
-No UI
-
-```bash
-npx playwright test
-```
-
-For detailed Playwright testing instructions, see [playwright-tests/README.md](./playwright-tests/README.md)
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) - Next.js deployment how-to.
+Refer to the [STYLE_GUIDE.md](./STYLE_GUIDE.md)
