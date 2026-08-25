@@ -45,14 +45,14 @@ export async function sendMessageNotification({
           <p style="margin: 20px 0;">
             <a href="${process.env.NEXT_PUBLIC_APP_URL || "https://yideshare.com"}"
                style="display: inline-block; padding: 12px 24px;
-                      background-color: #0891b2; color: white;
+                      background-color: #38705f; color: white;
                       text-decoration: none; border-radius: 6px;
                       font-weight: 500;">
               Check it out
             </a>
           </p>
           <p style="color: #666; font-size: 14px; margin: 20px 0 0 0;">
-            YideShare
+            Yideshare
           </p>
         </div>
       `,
