@@ -8,6 +8,7 @@ import { DateTime } from "luxon";
 
 import { useToast } from "@/hooks/useToast";
 
+import { FeedHeader } from "@/components/feed";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -72,56 +73,60 @@ export default function ThreadClient({ rideId, peerNetId, currentUserNetId }: Th
   }
 
   return (
-    <div className="bg-white min-h-screen flex flex-col max-w-2xl mx-auto">
-      <div className="px-6 py-4 border-b flex items-center gap-3">
-        <Link href="/messages" className="text-sm text-muted-foreground hover:underline">
-          ← Messages
-        </Link>
-      </div>
+    <div className="bg-white h-screen flex flex-col">
+      <FeedHeader feedbackUrl="https://forms.gle/DjypxU7tayRGVVMu5" />
 
-      <div className="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-3">
-        {isLoading && <p className="text-black">Loading…</p>}
-        {error && <p className="text-red-500">Failed to load messages.</p>}
+      <div className="flex-1 min-h-0 flex flex-col w-full max-w-2xl mx-auto">
+        <div className="px-6 py-4 border-b flex items-center gap-3">
+          <Link href="/messages" className="text-sm text-muted-foreground hover:underline">
+            ← Back to all messages
+          </Link>
+        </div>
 
-        {messages.map((m) => {
-          const isOwn = m.senderNetId === currentUserNetId;
-          return (
-            <div key={m.messageId} className={`flex ${isOwn ? "justify-end" : "justify-start"}`}>
-              <div
-                className={`max-w-[70%] rounded-2xl px-4 py-2 text-sm ${
-                  isOwn
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-black"
-                }`}
-              >
-                <p>{m.payload}</p>
-                <p className={`text-xs mt-1 ${isOwn ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
-                  {DateTime.fromISO(m.timestamp).toFormat("h:mm a")}
-                </p>
+        <div className="flex-1 min-h-0 overflow-y-auto px-6 py-4 flex flex-col gap-3">
+          {isLoading && <p className="text-black">Loading…</p>}
+          {error && <p className="text-red-500">Failed to load messages.</p>}
+
+          {messages.map((m) => {
+            const isOwn = m.senderNetId === currentUserNetId;
+            return (
+              <div key={m.messageId} className={`flex ${isOwn ? "justify-end" : "justify-start"}`}>
+                <div
+                  className={`max-w-[70%] rounded-2xl px-4 py-2 text-sm ${
+                    isOwn
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-black"
+                  }`}
+                >
+                  <p>{m.payload}</p>
+                  <p className={`text-xs mt-1 ${isOwn ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
+                    {DateTime.fromISO(m.timestamp).toFormat("h:mm a")}
+                  </p>
+                </div>
               </div>
-            </div>
-          );
-        })}
-        <div ref={bottomRef} />
-      </div>
+            );
+          })}
+          <div ref={bottomRef} />
+        </div>
 
-      <div className="px-6 py-4 border-t flex gap-2 items-end">
-        <Textarea
-          className="flex-1 resize-none"
-          rows={2}
-          placeholder="Type a message…"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              handleSend();
-            }
-          }}
-        />
-        <Button onClick={handleSend} disabled={sending || !text.trim()}>
-          Send
-        </Button>
+        <div className="px-6 py-4 border-t flex gap-2 items-end">
+          <Textarea
+            className="flex-1 resize-none"
+            rows={2}
+            placeholder="Type a message…"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+              }
+            }}
+          />
+          <Button onClick={handleSend} disabled={sending || !text.trim()}>
+            Send
+          </Button>
+        </div>
       </div>
     </div>
   );
