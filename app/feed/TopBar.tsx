@@ -197,19 +197,19 @@ export function TopBar({ onResults, rides }: TopBarProps) {
           {hasSearched ? (
             <>
               <Button
-                className="bg-[#cde3dd] hover:bg-[#b8d4cc] text-[#397060] h-10 rounded-full text-sm sm:text-base font-medium flex-1 sm:flex-none sm:w-32"
+                className="bg-[#cde3dd] hover:bg-[#b8d4cc] text-primary h-10 rounded-full text-sm sm:text-base font-medium flex-1 sm:flex-none sm:w-32"
                 onClick={handleClearSearch}
               >
                 Clear
               </Button>
               <Button
-                className="bg-[#cde3dd] hover:bg-[#b8d4cc] text-[#397060] h-10 rounded-full text-sm sm:text-base font-medium flex-1 sm:flex-none sm:w-32"
+                className="bg-[#cde3dd] hover:bg-[#b8d4cc] text-primary h-10 rounded-full text-sm sm:text-base font-medium flex-1 sm:flex-none sm:w-32"
                 onClick={handleFindRide}
               >
                 Search
               </Button>
               <Button
-                className="bg-[#397060] hover:bg-[#2d5848] text-white h-10 rounded-full text-sm sm:text-base font-medium flex-1 sm:flex-none sm:w-32"
+                className="bg-primary hover:bg-[#2d5848] text-white h-10 rounded-full text-sm sm:text-base font-medium flex-1 sm:flex-none sm:w-32"
                 onClick={() => setOpen(true)}
                 title={!date ? "Select a date first" : undefined}
               >
@@ -219,13 +219,13 @@ export function TopBar({ onResults, rides }: TopBarProps) {
           ) : (
             <>
               <Button
-                className="bg-[#cde3dd] hover:bg-[#b8d4cc] text-[#397060] h-10 rounded-full text-sm sm:text-base font-medium flex-1 sm:flex-none sm:w-32"
+                className="bg-[#cde3dd] hover:bg-[#b8d4cc] text-primary h-10 rounded-full text-sm sm:text-base font-medium flex-1 sm:flex-none sm:w-32"
                 onClick={handleFindRide}
               >
                 Search
               </Button>
               <Button
-                className="bg-[#397060] hover:bg-[#2d5848] text-white h-10 rounded-full text-sm sm:text-base font-medium flex-1 sm:flex-none sm:w-32"
+                className="bg-primary hover:bg-[#2d5848] text-white h-10 rounded-full text-sm sm:text-base font-medium flex-1 sm:flex-none sm:w-32"
                 onClick={() => setOpen(true)}
                 title={!date ? "Select a date first" : undefined}
               >

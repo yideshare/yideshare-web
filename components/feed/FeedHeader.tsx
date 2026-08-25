@@ -24,7 +24,7 @@ export function FeedHeader({ feedbackUrl }: { feedbackUrl: string }) {
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" aria-label="Open menu">
-                <Menu className="h-6 w-6 text-[#397060]" />
+                <Menu className="h-6 w-6 text-primary" />
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-3/4 sm:max-w-sm">
@@ -57,13 +57,13 @@ export function FeedHeader({ feedbackUrl }: { feedbackUrl: string }) {
         </div>
         <div className="flex-1 flex items-center justify-center sm:justify-start gap-3 sm:gap-6">
           <Link href="/feed">
-            <h1 className="text-lg sm:text-2xl lg:text-3xl font-righteous text-[#397060] tracking-wide hover:text-[#2d5848] transition-colors">
+            <h1 className="text-lg sm:text-2xl lg:text-3xl font-righteous text-primary tracking-wide hover:text-[#2d5848] transition-colors">
               Yideshare
             </h1>
           </Link>
           <Link
             href={feedbackUrl}
-            className="hidden sm:inline-flex rounded-full bg-[#397060] px-3 py-2 text-sm font-medium text-white hover:bg-[#2d5848] transition-colors lg:px-4"
+            className="hidden sm:inline-flex rounded-full bg-primary px-3 py-2 text-sm font-medium text-white hover:bg-[#2d5848] transition-colors lg:px-4"
           >
             Feedback
           </Link>
@@ -71,7 +71,7 @@ export function FeedHeader({ feedbackUrl }: { feedbackUrl: string }) {
         <div className="sm:hidden">
           <Link
             href={feedbackUrl}
-            className="rounded-full bg-[#397060] px-2.5 py-1.5 text-xs font-medium text-white hover:bg-[#2d5848] transition-colors"
+            className="rounded-full bg-primary px-2.5 py-1.5 text-xs font-medium text-white hover:bg-[#2d5848] transition-colors"
           >
             Feedback
           </Link>
