@@ -31,8 +31,8 @@ export async function sendMessageNotification({
 
   try {
     await resend.emails.send({
-      from: "onboarding@resend.dev",  //TODO: revert to this once verified"YideShare <yideshare@gmail.com>",
-      to: "yideshare@gmail.com",  // TODO: revert to this once verified receiverEmail,
+      from: "Yideshare <notifications@yideshare.com>",
+      to: receiverEmail,
       subject: `${senderName} messaged you about a ride`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
