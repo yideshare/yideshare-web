@@ -2,38 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Calendar, User, Bookmark, PowerOffIcon, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/frontend";
+import { cn, isActiveRoute } from "@/lib/frontend";
 
-const navItems = [
-  {
-    title: "Feed",
-    url: "/feed",
-    icon: Calendar,
-  },
-  {
-    title: "My Posts",
-    url: "/your-rides",
-    icon: User,
-  },
-  {
-    title: "Saved Rides",
-    url: "/bookmarks",
-    icon: Bookmark,
-  },
-  {
-    title: "Messages",
-    url: "/messages",
-    icon: MessageSquare,
-  },
-  {
-    title: "Logout",
-    url: "/api/auth/logout",
-    icon: PowerOffIcon,
-    isButton: true,
-  },
-];
+import { navItems } from "./navItems";
 
 export function TopNavButtons() {
   const pathname = usePathname();
@@ -41,7 +13,7 @@ export function TopNavButtons() {
     <div className="flex items-center gap-2">
       {navItems.map((item) => {
         const Icon = item.icon;
-        const isActive = pathname === item.url;
+        const isActive = isActiveRoute(pathname, item.url);
         if (item.isButton) {
           return (
             <Button

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import React from "react";
 import { usePathname } from "next/navigation";
-import { TopNavButtons } from "@/components/navigation";
+import { TopNavButtons, navItems } from "@/components/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -12,22 +12,11 @@ import {
   SheetClose,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Calendar, User, Bookmark, PowerOffIcon, Menu } from "lucide-react";
-import { cn } from "@/lib/frontend";
+import { Menu } from "lucide-react";
+import { cn, isActiveRoute } from "@/lib/frontend";
 
 export function FeedHeader({ feedbackUrl }: { feedbackUrl: string }) {
   const pathname = usePathname();
-  const navItems = [
-    { title: "Feed", url: "/feed", icon: Calendar },
-    { title: "My Posts", url: "/your-rides", icon: User },
-    { title: "Saved Rides", url: "/bookmarks", icon: Bookmark },
-    {
-      title: "Logout",
-      url: "/api/auth/logout",
-      icon: PowerOffIcon,
-      isButton: true,
-    },
-  ];
   return (
     <header className="bg-background py-4 sm:py-6 lg:py-8">
       <div className="flex h-12 sm:h-16 items-center justify-between px-4 sm:px-6 lg:px-8 mb-4 sm:mb-6 lg:mb-8">
@@ -42,8 +31,8 @@ export function FeedHeader({ feedbackUrl }: { feedbackUrl: string }) {
               <SheetTitle className="sr-only">Main navigation</SheetTitle>
               <nav className="mt-8 space-y-2">
                 {navItems.map((item) => {
-                  const Icon = item.icon as any;
-                  const isActive = pathname === item.url;
+                  const Icon = item.icon;
+                  const isActive = isActiveRoute(pathname, item.url);
                   return (
                     <SheetClose asChild key={item.title}>
                       <Link

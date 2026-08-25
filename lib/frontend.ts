@@ -12,6 +12,19 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
+ * Determines whether a navigation destination matches the current route,
+ * treating nested paths as active for their parent (e.g. a thread at
+ * /messages/abc/xyz keeps /messages highlighted).
+ *
+ * @param pathname - The current route, from usePathname()
+ * @param url - The navigation item's destination
+ * @returns True when the route is the destination or nested beneath it
+ */
+export function isActiveRoute(pathname: string, url: string): boolean {
+  return pathname === url || pathname.startsWith(`${url}/`);
+}
+
+/**
  * Extracts initials from a full name using the first and last word.
  *
  * @param name - Full name to extract initials from
