@@ -27,8 +27,6 @@ export default function MessagesClient() {
     <div className="bg-white min-h-screen">
       <FeedHeader feedbackUrl="https://forms.gle/DjypxU7tayRGVVMu5" />
       <div className="p-6 max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold text-black mb-6">Messages</h1>
-
         {isLoading ? (
           <p className="text-black">Loading conversations…</p>
         ) : error ? (
