@@ -22,32 +22,33 @@ export class ApiError extends Error {
  * If the error is an {@link ApiError}, its status code is used; otherwise
  * defaults to 500. Non-Error throws are returned as a generic message.
  *
- * @param handler - The route handler function to wrap
+ * @param handler The route handler function to wrap
+ * @param ctx Dynamic route parameters (e.g. the id from /users/[id])
  * @returns A new handler that catches and formats errors as JSON responses
  */
-export function withApiErrorHandler(
-  handler: (req: Request) => Promise<Response>
+export function withApiErrorHandler<Ctx>(
+  handler: (req: Request, ctx: Ctx) => Promise<Response>
 ) {
-  return async function (req: Request) {
+  return async function (req: Request, ctx: Ctx) {
     try {
-      return await handler(req);
+      return await handler(req, ctx);
     } catch (error) {
       console.error("API Error:", error);
 
-      var status_msg:number;
-      var err_msg:string;
+      let statusCode: number;
+      let errorMessage: string;
 
       if (error instanceof ApiError) {
-        status_msg = error.status;
-        err_msg = error.message;
+        statusCode = error.status;
+        errorMessage = error.message;
       } else {
-        status_msg = 500;
-        err_msg = "An unexpected error occurred"
+        statusCode = 500;
+        errorMessage = "An unexpected error occurred";
       }
       return NextResponse.json(
         {
-          error: err_msg,
-          status: status_msg
+          error: errorMessage,
+          status: statusCode
         }
       );
     }

@@ -7,11 +7,11 @@ export default async function BookmarkPage() {
   const netId = await getUserNetIdFromCookies();
 
   if (netId === null) {
-    return <div>Please log in to view your rides.</div>;
+    return <div>Please log in to view bookmarked rides.</div>;
   }
 
   const bookmarks = await findBookmarkedRides(netId);
   const bookmarkedRides = bookmarks.map((b) => b.ride);
 
-  return <BookmarksClient bookmarkedRides={bookmarkedRides} />;
+  return <BookmarksClient bookmarkedRides={bookmarkedRides} currentUserNetId={netId} />;
 }

@@ -10,10 +10,12 @@ import type { Ride } from "@/prisma/generated/prisma/client";
 
 interface BookmarksClientProps {
   bookmarkedRides: Ride[];
+  currentUserNetId: string;
 }
 
 export default function BookmarksClient({
   bookmarkedRides,
+  currentUserNetId,
 }: BookmarksClientProps) {
   const [sortBy, setSortBy] = useState("recent");
   const [localBookmarkedRides, setLocalBookmarkedRides] =
@@ -38,6 +40,7 @@ export default function BookmarksClient({
             rides={sortedRides}
             bookmarkedRideIds={localBookmarkedRides.map((r) => r.rideId)}
             onUnbookmark={handleUnbookmark}
+            currentUserNetId={currentUserNetId}
           />
         </div>
       </div>

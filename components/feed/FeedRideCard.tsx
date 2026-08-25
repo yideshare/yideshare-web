@@ -1,9 +1,10 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/useToast";
-import { Bookmark } from "lucide-react";
+import { Bookmark, MessageSquare } from "lucide-react";
 import { formatPhoneNumberIntl } from "react-phone-number-input";
 
 import { Card } from "@/components/ui/card";
@@ -23,7 +24,10 @@ import type { Ride } from "@/prisma/generated/prisma/client";
 interface FeedRideCardProps {
   ride: Ride;
   isBookmarkedInitial: boolean;
+  currentUserNetId: string;
   showDialog?: boolean;
+  hideBookmark?: boolean;
+  onUnbookmark?: (rideId: string) => void;
 }
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "";
@@ -35,12 +39,12 @@ export function FeedRideCard({
   onUnbookmark,
   // FIXME: temporary solution; get rid of canGreyOut
   canGreyOut = true,
+  currentUserNetId,
 }: FeedRideCardProps & {
-  hideBookmark?: boolean;
-  onUnbookmark?: (rideId: string) => void;
   canGreyOut?: boolean;
 }) {
   const { toast } = useToast();
+  const router = useRouter();
   const [isBookmarked, setIsBookmarked] = React.useState(isBookmarkedInitial);
 
   const isPast = new Date(ride.endTime) < new Date();
@@ -132,15 +136,24 @@ export function FeedRideCard({
           <div className="flex flex-col gap-1 text-black">
             <span className="text-lg sm:text-xl">{ownerName}</span>
             <span className="text-sm sm:text-xl text-black break-all">
-              {/* {ride.ownerPhone
-                ? formatPhoneNumberIntl(ride.ownerPhone)
-                : "No phone provided"} */}
-            <span className ="text-lg sm:text-xl">{ownerEmail}</span>
+            <span className="text-lg sm:text-xl">{ownerEmail}</span>
             </span>
           </div>
         </div>
 
         <div className="flex items-center gap-2 self-end sm:self-auto">
+          {currentUserNetId !== ride.ownerNetId && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(`/messages/${ride.rideId}/${ride.ownerNetId}`);
+              }}
+            >
+              <MessageSquare className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+            </Button>
+          )}
           {!hideBookmark && !isPast && (
             <Button
               variant="ghost"
@@ -178,7 +191,7 @@ export function FeedRideCard({
           </DialogTitle>
           <div className="mt-4">
             <div className="flex items-center text-lg text-black">
-              <span>Posted by: {ride.ownerName || "Raymond Hou"}</span>
+              <span>Posted by: {ride.ownerName}</span>
               <span className="mx-2">•</span>
               <span>{totalSeats - 1} seats available</span>
             </div>

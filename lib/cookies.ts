@@ -29,14 +29,14 @@ export async function getUserFromCookies(): Promise<AuthUser | null> {
       new TextEncoder().encode(secret)
     );
 
-    const netId: string = (payload as any).netId ?? "";
-    const firstName: string = (payload as any).firstName ?? "";
-    const lastName: string = (payload as any).lastName ?? "";
-    const email: string = (payload as any).email ?? "";
+    const netId = String(payload.netId);
+    const firstName = String(payload.firstName);
+    const lastName = String(payload.lastName);
+    const email = String(payload.email);
 
     return { netId, name: `${firstName} ${lastName}`.trim(), email };
-  } catch {
-    console.error("DB User: Invalid auth cookie or JWT token");
+  } catch (error) {
+    console.error("DB User: Invalid auth cookie or JWT token:", error);
     return null;
   }
 }

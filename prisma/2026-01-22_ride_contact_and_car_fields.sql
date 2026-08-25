@@ -1,4 +1,15 @@
 -- ==========================================
+-- MIGRATION: Ride contact and car fields
+-- Applied: 2026-01-22
+-- ==========================================
+-- Changes made to the "Ride" table:
+--   1. Added "ownerEmail" (backfilled from "User".email, then set NOT NULL)
+--   2. Added "hasCar" (boolean, NOT NULL, default false)
+--   3. Made "ownerPhone" nullable
+--
+-- Historical record - already applied to production. Do not re-run.
+
+-- ==========================================
 -- STEP 1: Backup Important Tables
 -- ==========================================
 -- Purpose: Create a snapshot of current data before making changes.

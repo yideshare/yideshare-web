@@ -46,6 +46,16 @@ async function handleCasValidate(req: Request) {
   }
 
   const { first_name: firstName, last_name: lastName, email } = yaliesData;
+
+  for (const [field, value] of Object.entries({ firstName, lastName, email })) {
+    if (typeof value !== "string" || !value.trim()) {
+      throw new ApiError(
+        `CAS Validate: Yalies record for ${netId} is missing ${field}`,
+        502
+      );
+    }
+  }
+
   const user = await findUserByNetId(netId);
   if (!user) {
     await createUser(netId, firstName, lastName, email);
